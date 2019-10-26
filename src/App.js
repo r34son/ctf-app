@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoute'
+import NavBar from './components/NavBar'
+import Login from './components/Login'
+import Scoreboard from './components/Scoreboard'
+import Tasks from './components/Tasks'
+import Admin from './components/Admin'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default () => (
+  <Router>
+    <NavBar />
+    <Route exact path="/" component={Scoreboard} />
+    <Route path="/login" component={Login} />
+    <PrivateRoute path="/tasks" component={Tasks} />
+    <Route path="/scoreboard" component={Scoreboard} />
+    <Route path="/admin" component={Admin} />
+  </Router>
+)
 
-export default App;
