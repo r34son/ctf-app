@@ -92,7 +92,7 @@ const useStyles = makeStyles({
 const Tasks = () => {
     const classes = useStyles();
 
-    const openTask = (...task) => {
+    const openTask = (task) => {
         console.log(task.title)
     }
     return (
@@ -107,7 +107,9 @@ const Tasks = () => {
                     <Typography gutterBottom>
                         {category.name}
                     </Typography>
-                    {category.tasks.map(({ value, ...rest }) => <Chip className={classes.chip} label={value} onClick={openTask.bind(this, ...rest)}/>)}  
+                    {category.tasks.map(({ value, ...rest }) => 
+                        <Chip className={classes.chip} label={value} onClick={openTask.bind(this, rest)}/>
+                    )}  
                 </Grid>
             )}
         </Grid>
