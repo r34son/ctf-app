@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AppBar, Tabs, Tab } from '@material-ui/core'
 
 export default () => {
-    const [current, setCurrent] = useState()
+    const [current, setCurrent] = useState(1)
     return (
         <AppBar position='static'>
             <Tabs

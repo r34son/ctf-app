@@ -3,7 +3,7 @@ import { Grid, Chip, Typography, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles({
     root: {
-        margin: '0 auto',
+        margin: '20px auto',
     },
     chip: {
         marginTop: '20px'
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     }]
   }, 
   {
-    name: 'crypto',
+    name: 'ppc',
     tasks: [{
         value: 50,
         title: 'Crypto 50',
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
     }]
   }, 
   {
-    name: 'crypto',
+    name: 'web',
     tasks: [{
         value: 50,
         title: 'Crypto 50',
@@ -50,7 +50,7 @@ const useStyles = makeStyles({
     }]
   }, 
   {
-    name: 'crypto',
+    name: 'forensics',
     tasks: [{
         value: 50,
         title: 'Crypto 50',
@@ -63,7 +63,7 @@ const useStyles = makeStyles({
     }]
   }, 
   {
-    name: 'crypto',
+    name: 'dkjd',
     tasks: [{
         value: 50,
         title: 'Crypto 50',
@@ -76,7 +76,7 @@ const useStyles = makeStyles({
     }]
   }, 
   {
-    name: 'crypto',
+    name: 'reverse',
     tasks: [{
         value: 50,
         title: 'Crypto 50',
@@ -103,12 +103,12 @@ const Tasks = () => {
             className={classes.root}        
         >
             {categories.map(category =>
-                <Grid sm={12/categories.length} container direction='column' alignItems='center'>
+                <Grid sm={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                     <Typography gutterBottom>
                         {category.name}
                     </Typography>
                     {category.tasks.map(({ value, ...rest }) => 
-                        <Chip className={classes.chip} label={value} onClick={openTask.bind(this, rest)}/>
+                        <Chip key={rest.title} className={classes.chip} label={value} onClick={() => openTask(rest)}/>
                     )}  
                 </Grid>
             )}
