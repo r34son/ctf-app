@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import AdminRoute from './components/AdminRoute'
+import PrivateRoute from './components/PrivateRoute'
+import NavBar from './components/NavBar'
+import Login from './components/Login'
+import Scoreboard from './components/Scoreboard'
+import Tasks from './components/Tasks'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default () => (
+  <Router>
+    <NavBar />
+    <Route exact to="/" component={Scoreboard} />
+    <Route to="/login" component={Login} />
+    <PrivateRoute to="/tasks" component={Tasks} />
+    <AdminRoute to="/scoreboard" component={Scoreboard} />
+  </Router>
+);
 
 export default App;
