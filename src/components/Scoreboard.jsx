@@ -42,11 +42,11 @@ const Scoreboard = () => {
 
     return (
         <Paper className={classes.root} elevation={4}>
-        <Table /*className={classes.table}*/ aria-label="simple table">
+        <Table /*className={classes.table}*/ aria-label="simple table" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center" border={1}>Team</TableCell>
-              <TableCell align="center" border={1}>Score</TableCell>
+              <TableCell align="center">Team</TableCell>
+              <TableCell align="center">Score</TableCell>
               { localStorage.getItem('isAdmin') && 
               tasks.map(task => <TableCell align="center">{task}</TableCell>)
               }
