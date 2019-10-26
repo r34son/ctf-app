@@ -1,3 +1,4 @@
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom'
 
 export default ({ component: Component, ...rest }) => (
@@ -5,7 +6,10 @@ export default ({ component: Component, ...rest }) => (
         localStorage.getItem('authToken') ? (
             <Component {...props} />
         ) : (
-            <Redirect to='/login'/>
+            <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location }
+            }}/>
         )
     }/>
 );
