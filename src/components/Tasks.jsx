@@ -95,7 +95,7 @@ const Tasks = () => {
             className={classes.root}        
         >
             {categories.map(category =>
-                <Grid sm={12/categories.length} container direction='column' alignItems='center' key={category.name}>
+                <Grid sm={12/categories.length} xs={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                     <Typography gutterBottom>
                         {category.name}
                     </Typography>

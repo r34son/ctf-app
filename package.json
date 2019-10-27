@@ -1,6 +1,7 @@
 {
   "name": "ctf-app",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "bcrypt": "^3.0.6",
