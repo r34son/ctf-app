@@ -1,12 +1,23 @@
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
-const { Task, User } = require('../models');
+const { Task, User, Timer } = require('../models');
 const verifyToken = require('../helpers/verifyToken');
 
 router.get('/', verifyToken(), async (req, res, next) => {
-  const tasks = Task.find();
+  const tasks = await Task.find();
+  const user = await User.findById(req.userId);
+  const timer = await Timer.findOne();
 
-  res.json(tasks);
+  const parsedTasks = tasks.filter(task => {
+    return task.forceEnabled || (timer.createdAt + task.enableAfter < Date.now());
+  }).map(task => {
+    return {
+      ...task,
+      solved: user.solvedTasks.indexOf(task._id) !== -1,
+    };
+  });
+
+  res.json(parsedTasks);
 });
 
 router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
@@ -14,7 +25,7 @@ router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
 
   try {
     const hash = await bcrypt.hash(flag, 10);
-    const task = Task.create({
+    const task = await Task.create({
       title,
       description,
       flag: hash,
@@ -27,8 +38,34 @@ router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
   }
 });
 
-router.post('/submit', verifyToken(), async (req, res, next) => {
+router.post('/submit/:id', verifyToken(), async (req, res, next) => {
+  const timer = await Timer.findOne();
+
+  if (!timer || timer.paused || (timer.createdAt + timer.duration) < Date.now()) return res.status(400).json({ error: 'Flags are not currenty accepted' });
+
+  const { id: taskId } = req.params;
+  const { flag } = req.body;
+  const user = await User.findById(req.userId);
+
+  if (user.solvedTasks.indexOf(taskId) !== -1) return res.status(400).json({ error: 'Task already solved' });
+
+  const task = await Task.findById(taskId);
+
+  if (timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
   
+  bcrypt.compare(flag, task.flag, (err, correct) => {
+    if (err) return res.status(401).json({ error: 'Submition failed' });
+    else if (!correct) return res.status(400).json({ error: 'Wrong flag' });
+
+    user.solvedTasks.push(task._id);
+    await user.save();
+
+    res.json({ solvedTask: task._id }); 
+  });
+});
+
+router.get('/forceEnable',  verifyToken({ isAdmin: true }), async (req, res, next) => {
+
 });
 
 module.exports = router;
