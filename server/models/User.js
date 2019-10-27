@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  completedTasks: {
+  solvedTasks: {
     type: [String],
   },
 });

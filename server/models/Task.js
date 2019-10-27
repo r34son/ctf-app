@@ -21,9 +21,13 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  enabled: {
+  enableAfter: {
+    type: Number,
+    default: 0,
+  },
+  forceEnabled: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
 
