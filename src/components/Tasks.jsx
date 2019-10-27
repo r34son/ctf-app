@@ -42,89 +42,45 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-  const categories = [{
-    name: 'crypto',
-    tasks: [{
-        value: 50,
-        title: 'Crypto 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'Crypto 200',
-        url: 'https://google.com',
-    }]
-  }, 
+  const tasks = [{
+      title: 'Crypto 50',
+      category: 'crypto',
+      description: 'dkjdfdfslds',
+      points: 50,
+  },
   {
-    name: 'ppc',
-    tasks: [{
-        value: 50,
-        title: 'PPC 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'PPC 200',
-        url: 'https://google.com',
-    }]
-  }, 
+    title: 'Crypto 200',
+    category: 'crypto',
+    description: 'dkjssdjlsjdsjdjlds',
+    url: 'https://google.com',
+    points: 200,
+  },
   {
-    name: 'web',
-    tasks: [{
-        value: 50,
-        title: 'Web 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'Web 200',
-        url: 'https://google.com',
-    }]
-  }, 
+    title: 'Web 200',
+    category: 'web',
+    description: 'dkjssfsflds',
+    url: 'https://google.com',
+    points: 200,
+  },
   {
-    name: 'forensics',
-    tasks: [{
-        value: 50,
-        title: 'Forensics 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'Forensics 200',
-        url: 'https://google.com',
-    }]
-  }, 
-  {
-    name: 'dkjd',
-    tasks: [{
-        value: 50,
-        title: 'DJJ 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'Crsdsdypto 200',
-        url: 'https://google.com',
-    }]
-  }, 
-  {
-    name: 'reverse',
-    tasks: [{
-        value: 50,
-        title: 'Reverse 50',
-        url: 'https://google.com',
-    },
-    {
-        value: 200,
-        title: 'Reverse 200',
-        url: 'https://google.com',
-    }]
-  }]
+    title: 'Reverse 50',
+    category: 'reverse',
+    description: 'dkjslds',
+    points: 50,
+}]
+
 
 const Tasks = () => {
     const [open, setOpen] = useState(false)
     const [task, setTask] = useState({})
     const [flag, setFlag] = useState('')
+    const [categories] = useState(Array.from(new Set(tasks.map(task => task.category))).map(category => {
+        return { 
+            name: category,
+            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+        }
+    }
+    ))
     const classes = useStyles();
 
     const submitFlag = () => {
@@ -143,10 +99,9 @@ const Tasks = () => {
                     <Typography gutterBottom>
                         {category.name}
                     </Typography>
-                    {category.tasks.map(({ value, ...rest }) => 
-                        <Chip key={rest.title} className={classes.mt20} label={value} onClick={() => { 
-                            console.log(rest)
-                            setTask(rest)
+                    {category.tasks.map(({ points, ...task }) => 
+                        <Chip key={task.title} className={classes.mt20} label={points} onClick={() => { 
+                            setTask(task)
                             setOpen(true)
                         }}/>
                     )}  
