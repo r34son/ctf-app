@@ -11,6 +11,8 @@ import {
     makeStyles
 } from '@material-ui/core'
 
+import config from '../config'
+
 const useStyles = makeStyles(theme => ({
     root: {
       display: 'flex',
@@ -31,6 +33,10 @@ const AddTeam = () => {
         team: '',
         password: '',
     })
+
+    const submit = () => {
+        console.log(config.port)
+    }
 
     const classes = useStyles();
 
@@ -66,7 +72,7 @@ const AddTeam = () => {
                             fullwidth
                         />
                     </FormGroup>
-                    <Button variant='contained' size='medium' color='primary' style={{ marginTop: '10px'}}>
+                    <Button variant='contained' size='medium' color='primary' style={{ marginTop: '10px'}} onClick={submit}>
                         Add
                     </Button>
                 </FormControl>
