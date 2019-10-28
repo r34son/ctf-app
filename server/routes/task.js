@@ -8,8 +8,12 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
+  const solvedAllInititalTasks = tasks.every(task => {
+    return task.enableAfter !== 0 || user.solvedTasks.indexOf(task._id) !== -1;
+  });
+
   const parsedTasks = tasks.filter(task => {
-    return task.forceEnabled || (timer.createdAt + task.enableAfter < Date.now());
+    return task.forceValue > 0 || solvedAllInititalTasks || task.forceEnabled || (timer.createdAt + task.enableAfter < Date.now());
   }).map(task => {
     return {
       ...task,
@@ -21,7 +25,7 @@ router.get('/', verifyToken(), async (req, res, next) => {
 });
 
 router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
-  const { title, description, flag, enbaled = true } = req.body;
+  const { title, description, flag, category, points, enableAfter = 0 } = req.body;
 
   try {
     const hash = await bcrypt.hash(flag, 10);
@@ -29,7 +33,9 @@ router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
       title,
       description,
       flag: hash,
-      enbaled,
+      category,
+      points,
+      enableAfter,
     });
 
     res.json(task);
@@ -51,7 +57,7 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
 
   const task = await Task.findById(taskId);
 
-  if (timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
+  if (task.forceValue === -1 || timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
   
   bcrypt.compare(flag, task.flag, (err, correct) => {
     if (err) return res.status(401).json({ error: 'Submition failed' });
@@ -64,8 +70,14 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
   });
 });
 
-router.get('/forceEnable',  verifyToken({ isAdmin: true }), async (req, res, next) => {
+router.post('/force',  verifyToken({ isAdmin: true }), async (req, res, next) => {
+  const { forceValue, taskId } = req.body;
+  const task = await Task.findById(taskId);
 
+  task.forceValue = forceValue;
+  await task.save();
+
+  res.json(task);
 });
 
 module.exports = router;
