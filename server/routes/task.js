@@ -59,7 +59,7 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
 
   if (task.forceValue === -1 || timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
   
-  bcrypt.compare(flag, task.flag, (err, correct) => {
+  bcrypt.compare(flag, task.flag, async (err, correct) => {
     if (err) return res.status(401).json({ error: 'Submition failed' });
     else if (!correct) return res.status(400).json({ error: 'Wrong flag' });
 
