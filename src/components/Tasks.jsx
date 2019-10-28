@@ -23,9 +23,9 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
+        //border: '2px solid #000',
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(3, 4, 3),
     },
     grid: {
         outline: '0',
@@ -95,7 +95,7 @@ const Tasks = () => {
             className={classes.root}        
         >
             {categories.map(category =>
-                <Grid sm={12/categories.length} container direction='column' alignItems='center' key={category.name}>
+                <Grid sm={12/categories.length} xs={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                     <Typography gutterBottom>
                         {category.name}
                     </Typography>
