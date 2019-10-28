@@ -38,7 +38,7 @@ const Scoreboard = () => {
         }]
     }]
 
-    const tasks = ['C1, C2, C3, C4']
+    const tasks = ['C1', 'C2', 'C3', 'C4']
 
     return (
         <Paper className={classes.root} elevation={4}>

@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 
 import config from '../config'
+import useFetch from '../hooks/useFetch'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,7 +36,10 @@ const AddTeam = () => {
     })
 
     const submit = () => {
-        console.log(config)
+        // const [isLoading, data] = useFetch(`${config.protocol}://${config.server}:${config.port}/api/auth/addUser`, {
+        //     method: 'POST',
+
+        // })
     }
 
     const classes = useStyles();

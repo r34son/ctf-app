@@ -63,6 +63,9 @@ const Admin = () => {
     const classes = useStyles();
 
     return (
+        !localStorage.getItem("isAdmin") ?
+        <Typography>You should be admin to see that</Typography>
+        :
         <Grid container md={12} justifyContent='space-between'>
             <Grid 
                 container 

@@ -23,6 +23,7 @@ router.post('/addUser', verifyToken({ isAdmin: true }), async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  console.log(req.body)
   const user = await User.findOne({ login: req.body.login });
 
   if (!user) return res.status(400).json({ error: 'User not found' });
