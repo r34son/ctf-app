@@ -35,7 +35,7 @@ const AddTeam = () => {
     })
 
     const submit = () => {
-        console.log(config.port)
+        console.log(config)
     }
 
     const classes = useStyles();
