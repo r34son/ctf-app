@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core'
 
 import config from '../config'
-import useFetch from '../hooks/useFetch'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,11 +34,37 @@ const AddTeam = () => {
         password: '',
     })
 
-    const submit = () => {
-        // const [isLoading, data] = useFetch(`${config.protocol}://${config.server}:${config.port}/api/auth/addUser`, {
-        //     method: 'POST',
+    const [isLoading, setIsLoading] = useState(false);
+    const [fetchedData, setFetchedData] = useState(null);
 
-        // })
+    const addteam = () => {
+        setIsLoading(true);
+        console.log('Sending request');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/auth/addUser`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }, 
+            body: JSON.stringify({
+                login: values.team,
+                password: values.password,
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Failed to fetch.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setFetchedData(data);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
     }
 
     const classes = useStyles();
@@ -76,7 +101,7 @@ const AddTeam = () => {
                             fullwidth
                         />
                     </FormGroup>
-                    <Button variant='contained' size='medium' color='primary' style={{ marginTop: '10px'}} onClick={submit}>
+                    <Button variant='contained' size='medium' color='primary' style={{ marginTop: '10px'}} onClick={addteam}>
                         Add
                     </Button>
                 </FormControl>
