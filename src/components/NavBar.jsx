@@ -9,7 +9,7 @@ export default ({ auth }) => {
         <AppBar position='static'>
             <Tabs
                 value={current}
-                onChange={(e, value) => setCurrent(value)}
+                onChange={(_, value) => setCurrent(value)}
                 centered
             >
                 <Tab label='Tasks' component={Link} to='/tasks'/>
