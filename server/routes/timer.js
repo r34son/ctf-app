@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const verifyToken = require('../helpers/verifyToken');
-const { Task, User, Timer } = require('../models');
+const { Timer } = require('../models');
 
 router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
   const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());
 
-  res.json({ timeLeft });
+  res.json({ timeLeft, paused: timer.paused });
 });
 
 router.post('/start', verifyToken({ isAdmin: true }), async (req, res, next) => {

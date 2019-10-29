@@ -62,21 +62,19 @@ const Login = (props) => {
             body: JSON.stringify({
                 login: values.team,
                 password: values.password,
-            })
-        })
-        .then(response => {
+            }),
+        }).then(response => {
             if (!response.ok) {
-            throw new Error('Failed to fetch.');
+                throw new Error('Failed to fetch.');
             }
+
             return response.json();
-        })
-        .then(data => {
+        }).then(data => {
             setIsLoading(false); 
             localStorage.setItem("authToken", data.token)
             if(data.isAdmin) localStorage.setItem("isAdmin", true)
             setFetchedData(data);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(err);
             setIsLoading(false);
         })

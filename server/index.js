@@ -28,5 +28,6 @@ app.use(cors())
   .use(morgan('dev'))
   .use(express.json())
   .use(express.static(path.join(__dirname, '../build')))
+  .use(express.static(path.join(__dirname, '../tasks')))
   .use('/', router)
   .listen(port, () => console.log(`Server is running on port ${ port }`));
