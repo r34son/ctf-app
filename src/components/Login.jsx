@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
         }
       }));
 
-const Login = (props) => {
+const Login = ({ location, setAuth }) => {
     const [values, setValues] = useState({
         team: '',
         password: '',
@@ -49,8 +49,6 @@ const Login = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [fetchedData, setFetchedData] = useState(null);
   
-   
-
     const login = () => {
         setIsLoading(true);
         console.log('Sending request');
@@ -73,6 +71,7 @@ const Login = (props) => {
         .then(data => {
             setIsLoading(false); 
             localStorage.setItem("authToken", data.token)
+            setAuth(data.token)
             if(data.isAdmin) localStorage.setItem("isAdmin", true)
             setFetchedData(data);
         })
@@ -97,7 +96,7 @@ const Login = (props) => {
             {localStorage.getItem('authToken') ? 
             <Redirect to={{
                 pathname: '/tasks',
-                state: {from: props.location }
+                state: {from: location }
             }}/>
             :
             <Grid item>

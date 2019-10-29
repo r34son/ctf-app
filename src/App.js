@@ -9,15 +9,17 @@ import Admin from './components/Admin'
 import AddTeam from './components/AddTeam'
 import './App.css';
 
-export default () => (
-  <Router>
-    <NavBar />
-    <Route exact path="/" component={Scoreboard} />
-    <Route path="/login" component={Login} />
-    <PrivateRoute path="/tasks" component={Tasks} />
-    <Route path="/scoreboard" component={Scoreboard} />
-    <Route path="/admin" component={Admin} />
-    <Route path="/addteam" component={AddTeam} />
-  </Router>
-)
+export default () => {
+  const [auth, setAuth] = React.useState(localStorage.getItem('authToken'))
+  return(
+    <Router>
+      <NavBar auth={auth}/>
+      <Route exact path="/" component={Scoreboard} />
+      <Route path="/login" render={() => <Login setAuth={setAuth}/>} />
+      <PrivateRoute path="/tasks" component={Tasks} />
+      <Route path="/scoreboard" component={Scoreboard} />
+      <Route path="/admin" component={Admin} />
+      <Route path="/addteam" component={AddTeam} />
+    </Router>
+)}
 
