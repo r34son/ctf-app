@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { 
     Grid, 
     Chip, 
@@ -13,7 +13,8 @@ import {
     FormGroup, 
     TextField, 
     Button 
-} from '@material-ui/core'
+} from '@material-ui/core';
+import ReactMarkdown from 'react-markdown';
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   const tasks = [{
       title: 'Crypto 50',
       category: 'crypto',
-      description: 'dkjdfdfslds',
+      description: 'dkjdfdfslds\n\n[Yahub Xyecoc](https://google.com)',
       points: 50,
   },
   {
@@ -128,8 +129,9 @@ const Tasks = () => {
                                 {task.title}
                             </Typography>
                             <Divider />
-                            {task.url && <Typography className={classes.mt10}>URL: <Link href={task.url}>{task.url}</Link></Typography>}
-                            {/*TODO add more task info*/}
+                            <Typography className={classes.mt10}>
+                                <ReactMarkdown source={task.description} />
+                            </Typography>
                             <FormGroup row className={classes.mt10}> 
                                 <TextField 
                                     label='Flag'

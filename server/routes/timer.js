@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const verifyToken = require('../helpers/verifyToken');
-const { Task, User, Timer } = require('../models');
+const { Timer } = require('../models');
 
 router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
   if (!timer) return res.status(400).json({ error: 'No timers started yet!' });
   const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());//TODO заюзать moment для рассчета "createdAt":"2019-10-30T17:49:40.566Z"
 
-  res.json({ timeLeft });
+  res.json({ timeLeft, paused: timer.paused });
 });
 
 router.post('/start', verifyToken({ isAdmin: true }), async (req, res, next) => {

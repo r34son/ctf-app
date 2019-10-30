@@ -9,7 +9,10 @@ const timerSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  paused: Boolean,
+  paused: {
+    type: Boolean,
+    default: false,
+  },
   pausedAt: Date,
 });
 
