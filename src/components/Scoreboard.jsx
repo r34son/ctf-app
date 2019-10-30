@@ -48,7 +48,7 @@ const Scoreboard = () => {
               <TableCell align="center">Team</TableCell>
               <TableCell align="center">Score</TableCell>
               { localStorage.getItem('isAdmin') && 
-              tasks.map(task => <TableCell align="center">{task}</TableCell>)
+              tasks.map(task => <TableCell align="center" key={task}>{task}</TableCell>)
               }
             </TableRow>
           </TableHead>
@@ -58,7 +58,7 @@ const Scoreboard = () => {
                 <TableCell align="center" component="th" scope="row">{team.name}</TableCell>
                 <TableCell align="center">{team.score}</TableCell>
                 { localStorage.getItem('isAdmin') && 
-                team.tasks.map(task => <TableCell align="center">{task.score}</TableCell>)
+                team.tasks.map(task => <TableCell align="center" key={`${team.name} ${task.score}`}>{task.score}</TableCell>)
                 }
               </TableRow>
             ))}

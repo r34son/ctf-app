@@ -15,6 +15,7 @@ import {
     Button 
 } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
+import Timer from './Timer'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -88,7 +89,9 @@ const Tasks = () => {
 
     }
 
-    return (
+    return (    
+      <>
+        <Timer />
         <Grid 
             container 
             spacing={1} 
@@ -150,6 +153,7 @@ const Tasks = () => {
                 </Fade>
             </Modal>
         </Grid>
+      </>
     )
 }
 

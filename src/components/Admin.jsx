@@ -5,7 +5,11 @@ import {
     makeStyles, 
     Switch,
     Button,
+    Snackbar,
 } from '@material-ui/core'
+
+import InfoIcon from '@material-ui/icons/Info';
+import config from '../config'
 
 const useStyles = makeStyles(theme => ({
     grid: {
@@ -60,6 +64,41 @@ const Admin = () => {
         }
     }
     ))
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [started, setStarted] = useState(null);
+
+    const turnOn = () => {
+        setIsLoading(true);
+        console.log('Sending request to start timer');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/start`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }, 
+            body: JSON.stringify({
+                duration: 50000,
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Failed to fetch.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setStarted(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
+    }
+
+    const turnOff = () => {}
+
     const classes = useStyles();
 
     return (
@@ -94,11 +133,17 @@ const Admin = () => {
             >
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography>Остановить таймер</Typography>
-                    <Button variant='contained' size='medium' color='primary' onClick={() => {}}>Off</Button>
+                    <Button variant='contained' size='medium' color='primary' onClick={turnOff}>Off</Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={started}
+                        onClose={() => setStarted(false)}
+                        message={<div><InfoIcon /> Timer started</div>}
+                    />
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography>Включить таймер</Typography>
-                    <Button variant='contained' size='medium' color='primary' onClick={() => {}}>On</Button>
+                    <Button variant='contained' size='medium' color='primary' onClick={turnOn}>On</Button>
                 </div>
             </Grid> 
         </Grid>
