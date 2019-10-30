@@ -4,7 +4,8 @@ const { Task, User, Timer } = require('../models');
 
 router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
-  const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());
+  if (!timer) return res.status(400).json({ error: 'No timers started yet!' });
+  const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());//TODO заюзать moment для рассчета "createdAt":"2019-10-30T17:49:40.566Z"
 
   res.json({ timeLeft });
 });
