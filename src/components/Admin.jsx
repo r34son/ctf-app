@@ -97,7 +97,35 @@ const Admin = () => {
         })
     }
 
-    const turnOff = () => {}
+    const turnOff = () => {
+        setIsLoading(true);
+        console.log('Sending request to stop timer');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/stop`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Failed to fetch.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setStarted(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
+    }
+
+    const pause = () => {}
+
+    const resume = () => {}
 
     const classes = useStyles();
 
@@ -109,7 +137,7 @@ const Admin = () => {
             <Grid 
                 container 
                 spacing={3} 
-                md={10}    
+                md={9}    
                 className={classes.root}        
             >
                 {categories.map(category =>
@@ -127,13 +155,13 @@ const Admin = () => {
                 )}
             </Grid>
             <Grid
-                md={2}
+                md={3}
                 container
                 className={classes.root}        
             >
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography>Остановить таймер</Typography>
-                    <Button variant='contained' size='medium' color='primary' onClick={turnOff}>Off</Button>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <Typography>Поставить на паузу таймер</Typography>
+                    <Button variant='contained' size='medium' color='primary' onClick={pause}>Pause</Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                         open={started}
@@ -141,9 +169,29 @@ const Admin = () => {
                         message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
                     />
                 </div>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <Typography>Продолжить таймер</Typography>
+                    <Button variant='contained' size='medium' color='primary' onClick={resume}>Resume</Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={started}
+                        onClose={() => setStarted(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
+                    />
+                </div>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <Typography>Включить таймер</Typography>
                     <Button variant='contained' size='medium' color='primary' onClick={turnOn}>On</Button>
+                </div>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <Typography>Выключить таймер</Typography>
+                    <Button variant='contained' size='medium' color='primary' onClick={turnOff}>Off</Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={started}
+                        onClose={() => setStarted(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
+                    />
                 </div>
             </Grid> 
         </Grid>
