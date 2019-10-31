@@ -6,7 +6,7 @@ export default () => {
   const [isLoading, setIsLoading] = useState(false);
   const [time, setTime] = useState(null);
 
-  useEffect(() => {
+  const getTimeLeft = () => {
     setIsLoading(true);
     fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/timeLeft`)
     .then(response => {
@@ -23,13 +23,16 @@ export default () => {
         console.log(err);
         setIsLoading(false);
     })
-  }, [])
+  }
+
+  useEffect(getTimeLeft, [])
+  setInterval(getTimeLeft, 60000)
 
   return ( 
     !isLoading && time && 
     <Grid container justify='flex-end'>
       <Typography style={{ margin: '50px'}}>
-        {time.timeLeft} hours : {time.timeLeft} minutes
+        {!time.paused ? `${time.timeLeft} hours : ${time.timeLeft} minutes` : 'Paused'}
       </Typography>
     </Grid>
   )

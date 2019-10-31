@@ -138,7 +138,7 @@ const Admin = () => {
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                         open={started}
                         onClose={() => setStarted(false)}
-                        message={<div><InfoIcon /> Timer started</div>}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
                     />
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

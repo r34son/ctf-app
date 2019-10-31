@@ -15,7 +15,7 @@ export default ({ auth }) => {
                 <Tab label='Tasks' component={Link} to='/tasks'/>
                 <Tab label='Scoreboard' component={Link} to='/scoreboard'/>
                 {!auth && <Tab label='Login' component={Link} to='/login'/>}
-                {localStorage.getItem('isAdmin') && <Tab label='Login' component={Link} to='/login'/>}
+                {localStorage.getItem('isAdmin') && <Tab label='Admin' component={Link} to='/admin'/>}
             </Tabs>
         </AppBar>
     )
