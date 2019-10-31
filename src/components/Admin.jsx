@@ -67,6 +67,10 @@ const Admin = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [started, setStarted] = useState(null);
+    const [paused, setPaused] = useState(null);
+    const [stoped, setStoped] = useState(null);
+    const [resumed, setResumed] = useState(null);
+    const [msg, setMsg] = useState('');
 
     const turnOn = () => {
         setIsLoading(true);
@@ -89,11 +93,14 @@ const Admin = () => {
         })
         .then(data => {
             setIsLoading(false); 
+            setMsg('Timer started')
             setStarted(true);
         })
         .catch(err => {
             console.log(err);
             setIsLoading(false);
+            setMsg(err.error)
+            setStarted(true);
         })
     }
 
@@ -108,14 +115,15 @@ const Admin = () => {
             }
         })
         .then(response => {
-            if (!response.ok) {
-            throw new Error('Failed to fetch.');
-            }
+            // if (!response.ok) {
+            // throw new Error('Failed to fetch.');
+            // }
             return response.json();
         })
         .then(data => {
             setIsLoading(false); 
-            setStarted(true);
+            setMsg(data.error || data.message)
+            setStoped(true);
         })
         .catch(err => {
             console.log(err);
@@ -123,9 +131,63 @@ const Admin = () => {
         })
     }
 
-    const pause = () => {}
+    const pause = () => {
+        setIsLoading(true);
+        console.log('Sending request to pause timer');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/pause`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }
+        })
+        .then(response => {
+            // if (!response.ok) {
+            // throw new Error('Failed to fetch.');
+            // }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setMsg(data.error || data.message)
+            setPaused(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+            setMsg(err.error)
+            setPaused(true);
+        })
+    }
 
-    const resume = () => {}
+    const resume = () => {
+        setIsLoading(true);
+        console.log('Sending request to stop timer');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/resume`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }
+        })
+        .then(response => {
+            // if (!response.ok) {
+            // throw new Error('Failed to fetch.');
+            // }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setMsg(data.error || data.message)
+            setResumed(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+            setMsg(err.error)
+            setResumed(true);
+        })
+    }
 
     const classes = useStyles();
 
@@ -164,9 +226,9 @@ const Admin = () => {
                     <Button variant='contained' size='medium' color='primary' onClick={pause}>Pause</Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        open={started}
-                        onClose={() => setStarted(false)}
-                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
+                        open={paused}
+                        onClose={() => setPaused(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
                     />
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -174,23 +236,29 @@ const Admin = () => {
                     <Button variant='contained' size='medium' color='primary' onClick={resume}>Resume</Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        open={started}
-                        onClose={() => setStarted(false)}
-                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
+                        open={resumed}
+                        onClose={() => setResumed(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
                     />
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <Typography>Включить таймер</Typography>
                     <Button variant='contained' size='medium' color='primary' onClick={turnOn}>On</Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={started}
+                        onClose={() => setStarted(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
+                    />
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <Typography>Выключить таймер</Typography>
                     <Button variant='contained' size='medium' color='primary' onClick={turnOff}>Off</Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        open={started}
-                        onClose={() => setStarted(false)}
-                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/> Timer started</div>}
+                        open={stoped}
+                        onClose={() => setStoped(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
                     />
                 </div>
             </Grid> 
