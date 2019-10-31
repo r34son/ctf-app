@@ -5,7 +5,7 @@ const { Timer } = require('../models');
 router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
   if (!timer) return res.status(400).json({ error: 'No timers started yet!' });
-  const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());
+  const timeLeft = Math.abs(+(new Date(timer.createdAt)) + +timer.duration - Date.now());
 
   res.json({ timeLeft, paused: timer.paused });
 });
