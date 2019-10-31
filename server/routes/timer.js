@@ -5,7 +5,7 @@ const { Timer } = require('../models');
 router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
   if (!timer) return res.status(400).json({ error: 'No timers started yet!' });
-  const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());//TODO заюзать moment для рассчета "createdAt":"2019-10-30T17:49:40.566Z"
+  const timeLeft = Math.abs(timer.createdAt + timer.duration - Date.now());
 
   res.json({ timeLeft, paused: timer.paused });
 });
@@ -25,6 +25,7 @@ router.post('/start', verifyToken({ isAdmin: true }), async (req, res, next) => 
 router.get('/pause', verifyToken({ isAdmin: true }), async (req, res, next) => {
   const timer = await Timer.findOne();
 
+  if (!timer) return res.status(400).json({ error: 'No timers started yet!' }); 
   if (timer.paused) return res.status(400).json({ error: 'Timer already paused' });
 
   timer.paused = true;
@@ -37,6 +38,7 @@ router.get('/pause', verifyToken({ isAdmin: true }), async (req, res, next) => {
 router.get('/resume', verifyToken({ isAdmin: true }), async (req, res, next) => {
   const timer = await Timer.findOne();
 
+  if (!timer) return res.status(400).json({ error: 'No timers started yet!' });  
   if (!timer.paused) return res.status(400).json({ error: 'Timer is not paused' });
 
   timer.paused = false;
