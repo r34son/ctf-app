@@ -29,7 +29,7 @@ export default () => {
   setInterval(getTimeLeft, 60000)
 
   return ( 
-    !isLoading && time && 
+    time && 
     <Grid container justify='flex-end'>
       <Typography style={{ margin: '50px'}}>
         {!time.paused ? `${time.timeLeft} hours : ${time.timeLeft} minutes` : 'Paused'}
