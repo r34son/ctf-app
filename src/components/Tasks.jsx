@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
 import Timer from './Timer'
+import config from '../config'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -47,21 +48,19 @@ const useStyles = makeStyles(theme => ({
   const tasks = [{
       title: 'Crypto 50',
       category: 'crypto',
-      description: 'dkjdfdfslds\n\n[Yahub Xyecoc](https://google.com)',
+      description: 'dkjdfdfslds\n\n[URL](https://google.com)',
       points: 50,
   },
   {
     title: 'Crypto 200',
     category: 'crypto',
     description: 'dkjssdjlsjdsjdjlds',
-    url: 'https://google.com',
     points: 200,
   },
   {
     title: 'Web 200',
     category: 'web',
     description: 'dkjssfsflds',
-    url: 'https://google.com',
     points: 200,
   },
   {
@@ -75,18 +74,70 @@ const useStyles = makeStyles(theme => ({
 const Tasks = () => {
     const [open, setOpen] = useState(false)
     const [task, setTask] = useState({})
-    const [flag, setFlag] = useState('')
-    const [categories] = useState(Array.from(new Set(tasks.map(task => task.category))).map(category => {
-        return { 
-            name: category,
-            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-        }
-    }
-    ))
+    const [flag, setFlag] = useState('')   
+    const [isLoading, setIsLoading] = useState(false);
+    const [tasks, setTasks] = useState(null);
+    const [categories, setCategories] = useState()
+    const [submitStatus, setSubmitStatus] = useState()
+    const [submitMsg, setSubmitMsg] = useState()
     const classes = useStyles();
 
-    const submitFlag = () => {
+    useEffect(() => setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+            name: category,
+            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+        })
+    )), [tasks])
+  
+    const getTasks = () => {
+        setIsLoading(true);
+        console.log('Sending request');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch.');
+            }
 
+            return response.json();
+        }).then(data => {
+            setIsLoading(false); 
+            setTasks(data);
+        }).catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
+    }
+
+    setInterval(getTasks, 60000)
+
+    const submitFlag = (id) => {
+        setIsLoading(true);
+        console.log('Sending request');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            },
+            body: JSON.stringify({ flag })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch.');
+            }
+
+            return response.json();
+        }).then(data => {
+            setIsLoading(false); 
+            setSubmitStatus(true);
+            setSubmitMsg(data);
+        }).catch(err => {
+            console.log(err);
+            setIsLoading(false);
+            setSubmitStatus(true);
+        })
     }
 
     return (    
@@ -144,7 +195,7 @@ const Tasks = () => {
                                     placeholder='CTF{...}'
                                     style={{flexGrow: '1', marginRight: '15px'}}
                                 />
-                                <Button variant='contained' size='medium' color='primary' onClick={submitFlag}>
+                                <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task.id)}>
                                     Submit
                                 </Button>
                             </FormGroup> 
@@ -153,6 +204,12 @@ const Tasks = () => {
                 </Fade>
             </Modal>
         </Grid>
+        <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            open={submitStatus}
+            onClose={() => setSubmitStatus(false)}
+            message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{submitMsg}</div>}
+        />
       </>
     )
 }

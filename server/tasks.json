@@ -2,7 +2,7 @@
   [{
     "category": "forensics",
     "title": "Forensics 100",
-    "description": "С этим изображением что-то не так. Разберитесь!",
+    "description": "С этим изображением что-то не так. Разберитесь!\n\n[URL](https://google.com)",
     "points": 100,
     "flag": "4F6C8337CD90157001DAFF658F314DDB"
   },
