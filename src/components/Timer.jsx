@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
+import moment from 'moment'
 import config from '../config'
 
 export default () => {
@@ -26,13 +27,16 @@ export default () => {
   }
 
   useEffect(getTimeLeft, [])
-  setInterval(getTimeLeft, 60000)
+  setInterval(getTimeLeft, 30000)
 
   return ( 
     time && 
     <Grid container justify='flex-end'>
       <Typography style={{ margin: '50px'}}>
-        {!time.paused ? `${time.timeLeft} hours : ${time.timeLeft} minutes` : 'Paused'}
+        {time.paused !== undefined ? 
+          `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
+          : 
+          (!time.message ? 'Paused' : `${time.message}`)}
       </Typography>
     </Grid>
   )

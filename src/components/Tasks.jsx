@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     Grid, 
     Chip, 
     Typography, 
     Modal, 
     Divider, 
-    Link, 
     makeStyles, 
     Backdrop, 
     Fade, 
     Paper, 
     FormGroup, 
     TextField, 
-    Button 
+    Button,
+    Snackbar 
 } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
+import InfoIcon from '@material-ui/icons/Info';
 import Timer from './Timer'
 import config from '../config'
 
@@ -26,7 +27,6 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
-        //border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(3, 4, 3),
     },
@@ -45,48 +45,42 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-  const tasks = [{
-      title: 'Crypto 50',
-      category: 'crypto',
-      description: 'dkjdfdfslds\n\n[URL](https://google.com)',
-      points: 50,
-  },
-  {
-    title: 'Crypto 200',
-    category: 'crypto',
-    description: 'dkjssdjlsjdsjdjlds',
-    points: 200,
-  },
-  {
-    title: 'Web 200',
-    category: 'web',
-    description: 'dkjssfsflds',
-    points: 200,
-  },
-  {
-    title: 'Reverse 50',
-    category: 'reverse',
-    description: 'dkjslds',
-    points: 50,
-}]
-
-
 const Tasks = () => {
     const [open, setOpen] = useState(false)
     const [task, setTask] = useState({})
     const [flag, setFlag] = useState('')   
     const [isLoading, setIsLoading] = useState(false);
-    const [tasks, setTasks] = useState(null);
-    const [categories, setCategories] = useState()
+    const [tasks, setTasks] = useState([{
+            title: 'Crypto 50',
+            category: 'crypto',
+            description: 'dkjdfdfslds\n\n[URL](https://google.com)',
+            points: 50,
+        },
+        {
+        title: 'Crypto 200',
+        category: 'crypto',
+        description: 'dkjssdjlsjdsjdjlds',
+        points: 200,
+        },
+        {
+        title: 'Web 200',
+        category: 'web',
+        description: 'dkjssfsflds',
+        points: 200,
+        },
+        {
+        title: 'Reverse 50',
+        category: 'reverse',
+        description: 'dkjslds',
+        points: 50,
+    }]);
+    const [categories, setCategories] = useState(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+        name: category,
+        tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+    })))
     const [submitStatus, setSubmitStatus] = useState()
     const [submitMsg, setSubmitMsg] = useState()
     const classes = useStyles();
-
-    useEffect(() => setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
-            name: category,
-            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-        })
-    )), [tasks])
   
     const getTasks = () => {
         setIsLoading(true);
@@ -94,7 +88,8 @@ const Tasks = () => {
         fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
             }
         }).then(response => {
             if (!response.ok) {
