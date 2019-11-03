@@ -27,10 +27,10 @@ export default () => {
   }
 
   useEffect(() => {
-    getTimeLeft();
-    console.log('first render')
+    getTimeLeft(); 
+    const timer = setInterval(getTimeLeft, 30000)
+    return () => clearInterval(timer)
   }, [])
-  setInterval(getTimeLeft, 30000)
 
   return ( 
     time && 
