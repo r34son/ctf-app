@@ -84,7 +84,7 @@ const Tasks = () => {
   
     const getTasks = () => {
         setIsLoading(true);
-        console.log('Sending request');
+        console.log('Sending request to get tasks');
         fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
             method: 'GET',
             headers: {

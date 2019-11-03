@@ -26,7 +26,10 @@ export default () => {
     })
   }
 
-  useEffect(getTimeLeft, [])
+  useEffect(() => {
+    getTimeLeft();
+    console.log('first render')
+  }, [])
   setInterval(getTimeLeft, 30000)
 
   return ( 
