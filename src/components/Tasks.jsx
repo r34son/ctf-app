@@ -106,7 +106,10 @@ const Tasks = () => {
         })
     }
 
-    setInterval(getTasks, 60000)
+    useEffect(() => {
+        const timer = setInterval(getTasks, 60000)
+        return () => clearTimeout(timer)
+    }, [])
 
     const submitFlag = (id) => {
         setIsLoading(true);
