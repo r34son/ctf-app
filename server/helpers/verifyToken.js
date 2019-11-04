@@ -9,6 +9,8 @@ function verifyToken(toCompare) {
   
     jwt.verify(token, secret, (err, user) => {
       if (err) return res.status(403).json({ error: 'Invalid token' });
+
+      req.userId = user.id;
   
       if (toCompare) {
         for (keyToCompare in toCompare) {
@@ -18,7 +20,6 @@ function verifyToken(toCompare) {
         }
       }
   
-      req.userId = user._id;
       next();
     });
   }

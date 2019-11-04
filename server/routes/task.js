@@ -15,7 +15,7 @@ router.get('/', verifyToken(), async (req, res, next) => {
   });
 
   const parsedTasks = tasks.filter(task => {
-    return task.forceValue > 0 || solvedAllInititalTasks || task.forceEnabled || (timer.createdAt + task.enableAfter < Date.now());
+    return task.forceValue > 0 || solvedAllInititalTasks || (+timer.createdAt + +task.enableAfter < Date.now()) || task.enableAfter === 0;
   }).map(task => {
     return {
       ...task,
