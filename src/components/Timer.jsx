@@ -18,6 +18,7 @@ export default () => {
         return response.json();
     })
     .then(data => {
+      console.log(data)
         setIsLoading(false); 
         setTime(data);
     })
@@ -38,7 +39,7 @@ export default () => {
       {isLoading ? <Loader /> : 
        time && <Grid container justify='flex-end'>
         <Typography style={{ margin: '50px'}}>
-          {time.paused !== undefined ? 
+          {time.paused !== undefined && !time.paused ? 
             `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
             : 
             (!time.message ? 'Paused' : `${time.message}`)}
