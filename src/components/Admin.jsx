@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Admin = () => {
-    const [tasks, setTasks] = useState();
-    const [categories, setCategories] = useState()
+    const [tasks, setTasks] = useState([]);
+    const [categories, setCategories] = useState([])
 
     const [isLoading, setIsLoading] = useState(false);
     const [started, setStarted] = useState(null);
