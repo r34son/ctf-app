@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
 const { Task, User, Timer } = require('../models');
@@ -78,6 +80,22 @@ router.post('/force',  verifyToken({ isAdmin: true }), async (req, res, next) =>
   await task.save();
 
   res.json(task);
+});
+
+router.get('/migrate', verifyToken({ isAdmin: true }), async (req, res, next) => {
+  const parsedTasks = JSON.parse(fs.readFileSync(path.join(__dirname, '../tasks.json')).toLocaleString());
+
+  try {
+    await Task.deleteMany();
+
+    for (let i = 0; i < parsedTasks.length; ++i) {
+      await Task.create(parsedTasks[i]);
+    }
+  } catch (e) {
+    return res.json({ error: 'Oops, something went wrong', details: e });
+  }
+
+  res.json({ message: 'Tasks migrate succesefully' });
 });
 
 module.exports = router;
