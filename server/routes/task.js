@@ -18,7 +18,7 @@ router.get('/', verifyToken(), async (req, res, next) => {
     return task.forceValue > 0 || solvedAllInititalTasks || (+timer.createdAt + +task.enableAfter < Date.now()) || task.enableAfter === 0;
   }).map(task => {
     return {
-      ...task,
+      ...task.toObject(),
       solved: user.solvedTasks.indexOf(task._id) !== -1,
     };
   });
