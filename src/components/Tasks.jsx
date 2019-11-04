@@ -17,6 +17,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import InfoIcon from '@material-ui/icons/Info';
 import Timer from './Timer'
+import Loader from './Loader'
 import config from '../config'
 
 const useStyles = makeStyles(theme => ({
@@ -50,34 +51,8 @@ const Tasks = () => {
     const [task, setTask] = useState({})
     const [flag, setFlag] = useState('')   
     const [isLoading, setIsLoading] = useState(false);
-    const [tasks, setTasks] = useState([{
-            title: 'Crypto 50',
-            category: 'crypto',
-            description: 'dkjdfdfslds\n\n[URL](https://google.com)',
-            points: 50,
-        },
-        {
-        title: 'Crypto 200',
-        category: 'crypto',
-        description: 'dkjssdjlsjdsjdjlds',
-        points: 200,
-        },
-        {
-        title: 'Web 200',
-        category: 'web',
-        description: 'dkjssfsflds',
-        points: 200,
-        },
-        {
-        title: 'Reverse 50',
-        category: 'reverse',
-        description: 'dkjslds',
-        points: 50,
-    }]);
-    const [categories, setCategories] = useState(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
-        name: category,
-        tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-    })))
+    const [tasks, setTasks] = useState([]);
+    const [categories, setCategories] = useState([])
     const [submitStatus, setSubmitStatus] = useState()
     const [submitMsg, setSubmitMsg] = useState()
     const classes = useStyles();
@@ -107,9 +82,17 @@ const Tasks = () => {
     }
 
     useEffect(() => {
+        getTasks()
         const timer = setInterval(getTasks, 60000)
         return () => clearTimeout(timer)
     }, [])
+
+    useEffect(() => {
+        setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+            name: category,
+            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+        })))
+    }, [tasks])
 
     const submitFlag = (id) => {
         setIsLoading(true);
@@ -141,6 +124,7 @@ const Tasks = () => {
     return (    
       <>
         <Timer />
+        {isLoading ? <Loader /> : 
         <Grid 
             container 
             spacing={1} 
@@ -160,48 +144,48 @@ const Tasks = () => {
                     )}  
                 </Grid>
             )}
-            <Modal
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-                disableAutoFocus
-                open={open}
-                onClose={() => setOpen(false)}
-                className={classes.modal}
-            >
-                <Fade in={open}>
-                    <Grid 
-                        md={5}
-                        className={classes.grid} 
-                    >
-                        <Paper className={classes.paper}>
-                            <Typography gutterBottom>
-                                {task.title}
-                            </Typography>
-                            <Divider />
-                            <Typography className={classes.mt10}>
-                                <ReactMarkdown source={task.description} />
-                            </Typography>
-                            <FormGroup row className={classes.mt10}> 
-                                <TextField 
-                                    label='Flag'
-                                    value={flag}
-                                    onChange={(e) => setFlag(e.target.value)}
-                                    margin='none'
-                                    placeholder='CTF{...}'
-                                    style={{flexGrow: '1', marginRight: '15px'}}
-                                />
-                                <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task.id)}>
-                                    Submit
-                                </Button>
-                            </FormGroup> 
-                        </Paper>
-                    </Grid>
-                </Fade>
-            </Modal>
-        </Grid>
+        </Grid>}
+        <Modal
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+            disableAutoFocus
+            open={open}
+            onClose={() => setOpen(false)}
+            className={classes.modal}
+        >
+            <Fade in={open}>
+                <Grid 
+                    md={5}
+                    className={classes.grid} 
+                >
+                    <Paper className={classes.paper}>
+                        <Typography gutterBottom>
+                            {task.title}
+                        </Typography>
+                        <Divider />
+                        <Typography className={classes.mt10}>
+                            <ReactMarkdown source={task.description} />
+                        </Typography>
+                        <FormGroup row className={classes.mt10}> 
+                            <TextField 
+                                label='Flag'
+                                value={flag}
+                                onChange={(e) => setFlag(e.target.value)}
+                                margin='none'
+                                placeholder='CTF{...}'
+                                style={{flexGrow: '1', marginRight: '15px'}}
+                            />
+                            <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task.id)}>
+                                Submit
+                            </Button>
+                        </FormGroup> 
+                    </Paper>
+                </Grid>
+            </Fade>
+        </Modal>
         <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             open={submitStatus}

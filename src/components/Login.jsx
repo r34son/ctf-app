@@ -19,6 +19,7 @@ import {
     Visibility,
     VisibilityOff,
 } from '@material-ui/icons'
+import Loader from './Loader'
 
 import config from '../config'
 import { Redirect } from 'react-router-dom'
@@ -91,55 +92,55 @@ const Login = ({ location, setAuth }) => {
             justify='center'
             style={{ minHeight: '90vh' }}
         >
-            {localStorage.getItem('authToken') ? 
-            <Redirect to={{
-                pathname: '/tasks',
-                state: {from: location }
-            }}/>
-            :
-            <Grid item>
-                <Paper style={{ padding: '30px'}} elevation={4}>
-                {isLoading ? <Typography>Loading...</Typography> :
-                <FormControl>
-                    <FormLabel filled className={`${classes.marginb} ${classes.label}`}>
-                        Login
-                    </FormLabel>
-                    <Divider/>
-                    <FormGroup>
-                        <TextField 
-                            label='Team'
-                            value={values.team}
-                            onChange={(e) => setValues({ ...values, team: e.target.value })}
-                            margin='normal'
-                        />
-                        <FormControl className={classes.marginb}>
-                            <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input
-                                id="password"
-                                type={values.showPassword ? 'text' : 'password'}
-                                value={values.password}
-                                onChange={(e) => setValues({ ...values, password: e.target.value })}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setValues({ ...values, showPassword: !values.showPassword })}
-                                        onMouseDown={(e) => e.preventDefault()}
-                                    >
-                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                    </InputAdornment>
-                            }
+            {isLoading ? <Loader /> :
+                localStorage.getItem('authToken') ? 
+                <Redirect to={{
+                    pathname: '/tasks',
+                    state: {from: location }
+                }}/>
+                :
+                <Grid item>
+                    <Paper style={{ padding: '30px'}} elevation={4}>
+                    
+                    <FormControl>
+                        <FormLabel filled className={`${classes.marginb} ${classes.label}`}>
+                            Login
+                        </FormLabel>
+                        <Divider/>
+                        <FormGroup>
+                            <TextField 
+                                label='Team'
+                                value={values.team}
+                                onChange={(e) => setValues({ ...values, team: e.target.value })}
+                                margin='normal'
                             />
-                        </FormControl>
-                    </FormGroup>
-                    <Button variant='contained' size='medium' color='primary' onClick={login}>
-                        Login
-                    </Button>
-                </FormControl>
-                }
-                </Paper>
-            </Grid>
+                            <FormControl className={classes.marginb}>
+                                <InputLabel htmlFor="password">Password</InputLabel>
+                                <Input
+                                    id="password"
+                                    type={values.showPassword ? 'text' : 'password'}
+                                    value={values.password}
+                                    onChange={(e) => setValues({ ...values, password: e.target.value })}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setValues({ ...values, showPassword: !values.showPassword })}
+                                            onMouseDown={(e) => e.preventDefault()}
+                                        >
+                                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                        </InputAdornment>
+                                }
+                                />
+                            </FormControl>
+                        </FormGroup>
+                        <Button variant='contained' size='medium' color='primary' onClick={login}>
+                            Login
+                        </Button>
+                    </FormControl>
+                    </Paper>
+                </Grid>
             }
         </Grid>
     )

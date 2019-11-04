@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
+import Loader from './Loader'
 import moment from 'moment'
 import config from '../config'
 
@@ -33,14 +34,17 @@ export default () => {
   }, [])
 
   return ( 
-    time && 
-    <Grid container justify='flex-end'>
-      <Typography style={{ margin: '50px'}}>
-        {!time.paused ? 
-          `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
-          : 
-          (!time.message ? 'Paused' : `${time.message}`)}
-      </Typography>
-    </Grid>
+    <>
+      {isLoading ? <Loader /> : 
+       time && <Grid container justify='flex-end'>
+        <Typography style={{ margin: '50px'}}>
+          {time.paused !== undefined ? 
+            `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
+            : 
+            (!time.message ? 'Paused' : `${time.message}`)}
+        </Typography>
+      </Grid>
+      }
+    </>
   )
 }
