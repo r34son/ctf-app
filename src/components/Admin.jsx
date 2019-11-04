@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
     Grid, 
     Typography, 
@@ -28,42 +28,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-  const tasks = [{
-      title: 'Crypto 50',
-      category: 'crypto',
-      description: 'dkjdfdfslds',
-      points: 50,
-  },
-  {
-    title: 'Crypto 200',
-    category: 'crypto',
-    description: 'dkjssdjlsjdsjdjlds',
-    url: 'https://google.com',
-    points: 200,
-  },
-  {
-    title: 'Web 200',
-    category: 'web',
-    description: 'dkjssfsflds',
-    url: 'https://google.com',
-    points: 200,
-  },
-  {
-    title: 'Reverse 50',
-    category: 'reverse',
-    description: 'dkjslds',
-    points: 50,
-}]
-
-
 const Admin = () => {
-    const [categories] = useState(Array.from(new Set(tasks.map(task => task.category))).map(category => {
-        return { 
-            name: category,
-            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-        }
-    }
-    ))
+    const [tasks, setTasks] = useState();
+    const [categories, setCategories] = useState()
 
     const [isLoading, setIsLoading] = useState(false);
     const [started, setStarted] = useState(null);
@@ -71,6 +38,67 @@ const Admin = () => {
     const [stoped, setStoped] = useState(null);
     const [resumed, setResumed] = useState(null);
     const [msg, setMsg] = useState('');
+
+    const getTasks = () => {
+        setIsLoading(true);
+        console.log('Sending request to get tasks');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch.');
+            }
+
+            return response.json();
+        }).then(data => {
+            setIsLoading(false); 
+            setTasks(data);
+        }).catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
+    }
+
+    useEffect(() => {
+        // setTasks([{
+        //         title: 'Crypto 50',
+        //         category: 'crypto',
+        //         description: 'dkjdfdfslds\n\n[URL](https://google.com)',
+        //         points: 50,
+        //     },
+        //     {
+        //         title: 'Crypto 200',
+        //         category: 'crypto',
+        //         description: 'dkjssdjlsjdsjdjlds',
+        //         points: 200,
+        //     },
+        //     {
+        //         title: 'Web 200',
+        //         category: 'web',
+        //         description: 'dkjssfsflds',
+        //         points: 200,
+        //     },
+        //     {
+        //         title: 'Reverse 50',
+        //         category: 'reverse',
+        //         description: 'dkjslds',
+        //         points: 50,
+        // }])
+        getTasks()
+        const timer = setInterval(getTasks, 60000)
+        return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+            name: category,
+            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+        })))
+    }, [tasks])
 
     const turnOn = () => {
         setIsLoading(true);
@@ -189,6 +217,33 @@ const Admin = () => {
         })
     }
 
+    const onToggle = (id, enabled) => {
+        setIsLoading(true);
+        console.log('Sending request to enable task');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/force`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            },
+            body: JSON.stringify({ forceValue: enabled ? -1 : 1 , taskId: id })
+        })
+        .then(response => {
+            // if (!response.ok) {
+            // throw new Error('Failed to fetch.');
+            // }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data)
+            setIsLoading(false); 
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+        })
+    }
+
     const classes = useStyles();
 
     return (
@@ -208,9 +263,9 @@ const Admin = () => {
                             {category.name}
                         </Typography>
                         {category.tasks.map(({ id, title, points, enabled }) => 
-                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} key={title}>
+                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} key={id}>
                                 <Typography>{points}</Typography>
-                                <Switch checked={enabled} onChange={() => {}} color='primary'/>
+                                <Switch checked={enabled} onChange={() => onToggle(id, enabled)} color='primary'/>
                             </div>
                         )}  
                     </Grid>
