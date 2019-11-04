@@ -82,6 +82,30 @@ const Tasks = () => {
     }
 
     useEffect(() => {
+        // setTasks([{
+        //         title: 'Crypto 50',
+        //         category: 'crypto',
+        //         description: 'dkjdfdfslds\n\n[URL](https://google.com)',
+        //         points: 50,
+        //     },
+        //     {
+        //         title: 'Crypto 200',
+        //         category: 'crypto',
+        //         description: 'dkjssdjlsjdsjdjlds',
+        //         points: 200,
+        //     },
+        //     {
+        //         title: 'Web 200',
+        //         category: 'web',
+        //         description: 'dkjssfsflds',
+        //         points: 200,
+        //     },
+        //     {
+        //         title: 'Reverse 50',
+        //         category: 'reverse',
+        //         description: 'dkjslds',
+        //         points: 50,
+        // }])
         getTasks()
         const timer = setInterval(getTasks, 60000)
         return () => clearTimeout(timer)
@@ -129,9 +153,10 @@ const Tasks = () => {
             container 
             spacing={1} 
             md={8}    
-            className={classes.root}        
+            className={classes.root}  
+            justify='center'      
         >
-            {categories.map(category =>
+            {categories.length ? categories.map(category =>
                 <Grid sm={12/categories.length} xs={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                     <Typography gutterBottom>
                         {category.name}
@@ -143,7 +168,8 @@ const Tasks = () => {
                         }}/>
                     )}  
                 </Grid>
-            )}
+            ) : 
+            <Typography gutterBottom>No tasks!</Typography>}
         </Grid>}
         <Modal
             closeAfterTransition
