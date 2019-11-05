@@ -82,30 +82,6 @@ const Tasks = () => {
     }
 
     useEffect(() => {
-        // setTasks([{
-        //         title: 'Crypto 50',
-        //         category: 'crypto',
-        //         description: 'dkjdfdfslds\n\n[URL](https://google.com)',
-        //         points: 50,
-        //     },
-        //     {
-        //         title: 'Crypto 200',
-        //         category: 'crypto',
-        //         description: 'dkjssdjlsjdsjdjlds',
-        //         points: 200,
-        //     },
-        //     {
-        //         title: 'Web 200',
-        //         category: 'web',
-        //         description: 'dkjssfsflds',
-        //         points: 200,
-        //     },
-        //     {
-        //         title: 'Reverse 50',
-        //         category: 'reverse',
-        //         description: 'dkjslds',
-        //         points: 50,
-        // }])
         getTasks()
         const timer = setInterval(getTasks, 60000)
         return () => clearTimeout(timer)
@@ -120,8 +96,8 @@ const Tasks = () => {
 
     const submitFlag = (id) => {
         setIsLoading(true);
-        console.log('Sending request');
-        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/`, {
+        console.log('Sending request to submit flag');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/submit/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -135,6 +111,7 @@ const Tasks = () => {
 
             return response.json();
         }).then(data => {
+            console.log(data)
             setIsLoading(false); 
             setSubmitStatus(true);
             setSubmitMsg(data);
@@ -179,7 +156,10 @@ const Tasks = () => {
             }}
             disableAutoFocus
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => {
+                setOpen(false);
+                setFlag('')
+            }}
             className={classes.modal}
         >
             <Fade in={open}>
@@ -204,7 +184,7 @@ const Tasks = () => {
                                 placeholder='CTF{...}'
                                 style={{flexGrow: '1', marginRight: '15px'}}
                             />
-                            <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task.id)}>
+                            <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task._id)}>
                                 Submit
                             </Button>
                         </FormGroup> 

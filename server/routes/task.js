@@ -76,7 +76,7 @@ router.post('/force',  verifyToken({ isAdmin: true }), async (req, res, next) =>
   const { forceValue, taskId } = req.body;
   const task = await Task.findById(taskId);
 
-  task.forceValue = forceValue;
+  task.force = forceValue;
   await task.save();
 
   res.json(task);

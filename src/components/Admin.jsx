@@ -7,6 +7,7 @@ import {
     Button,
     Snackbar,
 } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 import InfoIcon from '@material-ui/icons/Info';
 import config from '../config'
@@ -37,6 +38,7 @@ const Admin = () => {
     const [paused, setPaused] = useState(null);
     const [stoped, setStoped] = useState(null);
     const [resumed, setResumed] = useState(null);
+    const [migrated, setMigrated] = useState(null)
     const [msg, setMsg] = useState('');
 
     const getTasks = () => {
@@ -217,6 +219,35 @@ const Admin = () => {
         })
     }
 
+    const migrate = () => {
+        setIsLoading(true);
+        console.log('Sending request to migrate');
+        fetch(`${config.protocol}://${config.server}:${config.port}/api/task/migrate`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'auth': localStorage.getItem('authToken')
+            }
+        })
+        .then(response => {
+            // if (!response.ok) {
+            // throw new Error('Failed to fetch.');
+            // }
+            return response.json();
+        })
+        .then(data => {
+            setIsLoading(false); 
+            setMsg(data.error || data.message)
+            setMigrated(true);
+        })
+        .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+            setMsg(err.error)
+            setMigrated(true);
+        })
+    }
+
     const onToggle = (id, enabled) => {
         setIsLoading(true);
         console.log('Sending request to enable task');
@@ -262,10 +293,10 @@ const Admin = () => {
                         <Typography gutterBottom>
                             {category.name}
                         </Typography>
-                        {category.tasks.map(({ id, title, points, enabled }) => 
+                        {category.tasks.map(({ id, title, points, force }) => 
                             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} key={id}>
                                 <Typography>{points}</Typography>
-                                <Switch checked={enabled} onChange={() => onToggle(id, enabled)} color='primary'/>
+                                <Switch checked={force > 0} onChange={() => onToggle(id, force)} color='primary'/>
                             </div>
                         )}  
                     </Grid>
@@ -315,6 +346,22 @@ const Admin = () => {
                         onClose={() => setStoped(false)}
                         message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
                     />
+                </div>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <Typography>Обновить задания</Typography>
+                    <Button variant='contained' size='medium' color='primary' onClick={migrate}>Update</Button>
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        open={migrated}
+                        onClose={() => setMigrated(false)}
+                        message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{msg}</div>}
+                    />
+                </div>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <Typography>Добавить команду</Typography> 
+                    <Button variant='contained' size='medium' color='primary' component={Link} to='/addteam'>
+                        Add
+                    </Button>
                 </div>
             </Grid> 
         </Grid>
