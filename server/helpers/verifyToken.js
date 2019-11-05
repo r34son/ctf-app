@@ -14,7 +14,7 @@ function verifyToken(toCompare) {
       req.isAdmin = user.isAdmin;
   
       if (toCompare) {
-        for (keyToCompare in toCompare) {
+        for (let keyToCompare in toCompare) {
           if (user[keyToCompare] !== toCompare[keyToCompare]) {
             return res.status(401).json({ error: 'Unauthorized' });
           }

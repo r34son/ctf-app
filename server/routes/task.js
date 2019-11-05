@@ -58,9 +58,13 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
     res.json({ error: 'Oops, something went wrong!', details: e });
   }
 
-  if (!req.isAdmin) {
-    const simpleScoreboard = Object.keys(scoreboard).map(user => {
-      scoreboard[user] = scoreboard[user].reduce((score, task) => score + +task.points, 0);
+  console.log(scoreboard);
+
+  if (req.isAdmin) {
+    const simpleScoreboard = {};
+
+    Object.keys(scoreboard).map(user => {
+      simpleScoreboard[user] = scoreboard[user].reduce((score, task) => score + +task.points, 0);
     });
 
     return res.json({ scoreboard: simpleScoreboard });
