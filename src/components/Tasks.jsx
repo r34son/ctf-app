@@ -53,8 +53,6 @@ const Tasks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [categories, setCategories] = useState([])
-    const [submitStatus, setSubmitStatus] = useState()
-    const [submitMsg, setSubmitMsg] = useState()
     const classes = useStyles();
   
     const getTasks = () => {
@@ -113,12 +111,10 @@ const Tasks = () => {
         }).then(data => {
             console.log(data)
             setIsLoading(false); 
-            setSubmitStatus(true);
-            setSubmitMsg(data);
+
         }).catch(err => {
             console.log(err);
             setIsLoading(false);
-            setSubmitStatus(true);
         })
     }
 
@@ -175,6 +171,9 @@ const Tasks = () => {
                         <Typography className={classes.mt10}>
                             <ReactMarkdown source={task.description} />
                         </Typography>
+                        {task.solved ?
+                        <Chip className={classes.mt20} label={'Task solved'} />
+                        :
                         <FormGroup row className={classes.mt10}> 
                             <TextField 
                                 label='Flag'
@@ -187,17 +186,11 @@ const Tasks = () => {
                             <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task._id)}>
                                 Submit
                             </Button>
-                        </FormGroup> 
+                        </FormGroup>}
                     </Paper>
                 </Grid>
             </Fade>
         </Modal>
-        <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            open={submitStatus}
-            onClose={() => setSubmitStatus(false)}
-            message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{submitMsg}</div>}
-        />
       </>
     )
 }

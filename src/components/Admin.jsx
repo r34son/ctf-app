@@ -257,7 +257,7 @@ const Admin = () => {
                 'Content-Type': 'application/json;charset=utf-8',
                 'auth': localStorage.getItem('authToken')
             },
-            body: JSON.stringify({ forceValue: enabled ? -1 : 1 , taskId: id })
+            body: JSON.stringify({ force: enabled ? -1 : 1 , taskId: id })
         })
         .then(response => {
             // if (!response.ok) {
@@ -268,6 +268,7 @@ const Admin = () => {
         .then(data => {
             console.log(data)
             setIsLoading(false); 
+            getTasks();
         })
         .catch(err => {
             console.log(err);
@@ -293,10 +294,10 @@ const Admin = () => {
                         <Typography gutterBottom>
                             {category.name}
                         </Typography>
-                        {category.tasks.map(({ id, title, points, force }) => 
-                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} key={id}>
+                        {category.tasks.map(({ _id, title, points, enabled }) => 
+                            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} key={_id}>
                                 <Typography>{points}</Typography>
-                                <Switch checked={force > 0} onChange={() => onToggle(id, force)} color='primary'/>
+                                <Switch checked={enabled} onChange={() => onToggle(_id, enabled)} color='primary'/>
                             </div>
                         )}  
                     </Grid>
