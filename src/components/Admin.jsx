@@ -112,7 +112,7 @@ const Admin = () => {
                 'auth': localStorage.getItem('authToken')
             }, 
             body: JSON.stringify({
-                duration: 360000,
+                duration: 1200000,
             })
         })
         .then(response => {

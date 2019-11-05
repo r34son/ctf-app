@@ -9,7 +9,7 @@ const config = require('./helpers/config');
 const { mongo: { url, username, password }, port: configPort } = config;
 
 mongoose.connect(
-  `mongodb://${username}:${password}@${url}`, {
+  `mongodb+srv://${username}:${password}@${url}`, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,

@@ -109,9 +109,9 @@ const Tasks = () => {
 
             return response.json();
         }).then(data => {
-            console.log(data)
             setIsLoading(false); 
-
+            getTasks()
+            setOpen(false)
         }).catch(err => {
             console.log(err);
             setIsLoading(false);

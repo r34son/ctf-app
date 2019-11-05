@@ -10,6 +10,10 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
+  if(!timer) {
+    res.json([])
+  }
+
   if (req.isAdmin) {
     const tasksWithEnabled = tasks.map(task => ({
       ...task.toObject(),
@@ -42,13 +46,12 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
 
   try {
     const users = await User.find({ isAdmin: false });
-
+    
     for (let i = 0; i < users.length; ++i) {
       let team = [];
 
       for (let j = 0; j < users[i].solvedTasks.length; ++j) {
         const task = await Task.findById(users[i].solvedTasks[j]);
-
         team.push({ title: task.title, points: task.points });
       }
 
@@ -96,6 +99,7 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
 
   if (!timer || timer.paused || (timer.createdAt + timer.duration) < Date.now()) return res.status(400).json({ error: 'Flags are not currenty accepted' });
 
+  console.log((timer.createdAt + timer.duration) < Date.now())
   const { id: taskId } = req.params;
   const { flag } = req.body;
   const user = await User.findById(req.userId);

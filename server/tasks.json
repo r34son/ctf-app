@@ -3,27 +3,27 @@
   "title": "Forensics 100",
   "description": "С этим изображением что-то не так. Разберитесь!\n\n[URL](https://google.com)",
   "points": 100,
-  "flag": "4F6C8337CD90157001DAFF658F314DDB",
-  "enableAfter": 100000000
+  "flag": "CTF{4F6C8337CD90157001DAFF658F314DDB}",
+  "enableAfter": 50000
 },
 {
   "category": "forensics",
   "title": "Forensics 200",
   "description": "Вы умеете «взламывать» пароли в PDF? :)",
   "points": 200,
-  "flag": "J4v4scr1pt__D1gg3r"
+  "flag": "CTF{J4v4scr1pt__D1gg3r}"
 },
 {
   "category": "forensics",
   "title": "Forensics 300",
   "description": "Нами был задержан подозреваемый по обвинению в неправомерном доступе к компьютерной информации. Мы считаем, что путем взлома, злоумышленник получил доступ к чужому аккаунту и воспользовался этим. Нам повезло и удалось добыть дамп памяти его виртуальной машины, с которой предположительно осуществлялся взлом. Выясните, к какой информации злоумышленник смог получить доступ.",
   "points": 300,
-  "flag": "D0nt_us3_s4m3_p4ssw0rd_f0r_m4ny_pl4c3s"
+  "flag": "CTF{D0nt_us3_s4m3_p4ssw0rd_f0r_m4ny_pl4c3s}"
 },
 {
   "category": "forensics",
   "title": "Forensics 400",
   "description": "Мы снова расследуем случай взлома нашего клиента. Выясните, что случилось на этот раз.",
   "points": 400,
-  "flag": "m3g4mozzzg_private_foto"
+  "flag": "CTF{m3g4mozzzg_private_foto}"
 }]
