@@ -24,7 +24,7 @@ router.get('/', verifyToken(), async (req, res, next) => {
   });
 
   const parsedTasks = tasks.filter(task => {
-    return task.force > 0 || solvedAllInititalTasks || (+timer.createdAt + +task.enableAfter < Date.now()) || task.enableAfter === 0;
+    return task.force > 0 || solvedAllInititalTasks || (+task.force === 0 && (+task.enableAfter === 0 || +timer.createdAt + +task.enableAfter < Date.now()));
   }).map(task => {
     const { flag, ...noFlag } = task.toObject();
 
@@ -57,8 +57,6 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
   } catch (e) {
     res.json({ error: 'Oops, something went wrong!', details: e });
   }
-
-  console.log(scoreboard);
 
   if (!req.isAdmin) {
     const simpleScoreboard = {};
