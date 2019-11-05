@@ -60,7 +60,7 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
 
   console.log(scoreboard);
 
-  if (req.isAdmin) {
+  if (!req.isAdmin) {
     const simpleScoreboard = {};
 
     Object.keys(scoreboard).map(user => {
