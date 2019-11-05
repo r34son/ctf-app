@@ -10,20 +10,63 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
+  if (req.isAdmin) {
+    const tasksWithEnabled = tasks.map(task => ({
+      ...task.toObject(),
+      enabled: task.force > 0 || (+task.force === 0 && +timer.createdAt + +task.enableAfter < Date.now()),
+    }));
+  
+    return res.json(tasksWithEnabled);
+  }
+
   const solvedAllInititalTasks = tasks.every(task => {
     return task.enableAfter !== 0 || user.solvedTasks.indexOf(task._id) !== -1;
   });
 
   const parsedTasks = tasks.filter(task => {
-    return task.forceValue > 0 || solvedAllInititalTasks || (+timer.createdAt + +task.enableAfter < Date.now()) || task.enableAfter === 0;
+    return task.force > 0 || solvedAllInititalTasks || (+timer.createdAt + +task.enableAfter < Date.now()) || task.enableAfter === 0;
   }).map(task => {
+    const { flag, ...noFlag } = task.toObject();
+
     return {
-      ...task.toObject(),
+      ...noFlag,
       solved: user.solvedTasks.indexOf(task._id) !== -1,
     };
   });
 
   res.json(parsedTasks);
+});
+
+router.get('/scoreboard', verifyToken(), async (req, res, next) => {
+  const scoreboard = {};
+
+  try {
+    const users = await User.find({ isAdmin: false });
+
+    for (let i = 0; i < users.length; ++i) {
+      let team = [];
+
+      for (let j = 0; j < users[i].solvedTasks.length; ++j) {
+        const task = await Task.findById(users[i].solvedTasks[j]);
+
+        team.push({ title: task.title, points: task.points });
+      }
+
+      scoreboard[users[i].login] = team;
+    }
+  } catch (e) {
+    res.json({ error: 'Oops, something went wrong!', details: e });
+  }
+
+  if (!req.isAdmin) {
+    const simpleScoreboard = Object.keys(scoreboard).map(user => {
+      scoreboard[user] = scoreboard[user].reduce((score, task) => score + +task.points, 0);
+    });
+
+    return res.json({ scoreboard: simpleScoreboard });
+  }
+
+  res.json({ scoreboard });
 });
 
 router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
@@ -59,7 +102,7 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
 
   const task = await Task.findById(taskId);
 
-  if (task.forceValue === -1 || timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
+  if (task.force < 0 || timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
   
   bcrypt.compare(flag, task.flag, async (err, correct) => {
     if (err) return res.status(401).json({ error: 'Submition failed' });
@@ -73,10 +116,10 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
 });
 
 router.post('/force',  verifyToken({ isAdmin: true }), async (req, res, next) => {
-  const { forceValue, taskId } = req.body;
+  const { force, taskId } = req.body;
   const task = await Task.findById(taskId);
 
-  task.forceValue = forceValue;
+  task.force = force;
   await task.save();
 
   res.json(task);
@@ -89,6 +132,7 @@ router.get('/migrate', verifyToken({ isAdmin: true }), async (req, res, next) =>
     await Task.deleteMany();
 
     for (let i = 0; i < parsedTasks.length; ++i) {
+      parsedTasks[i].flag = await bcrypt.hash(parsedTasks[i].flag, 10);
       await Task.create(parsedTasks[i]);
     }
   } catch (e) {
