@@ -8,6 +8,7 @@ import {
     Paper,
     Button,
     Divider,
+    Typography,
     makeStyles
 } from '@material-ui/core'
 
@@ -70,6 +71,9 @@ const AddTeam = () => {
     const classes = useStyles();
 
     return (
+        !localStorage.getItem("isAdmin") ?
+        <Typography>You should be admin to see that</Typography>
+        :
         <Grid
             container
             spacing={0}

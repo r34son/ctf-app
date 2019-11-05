@@ -14,10 +14,10 @@ export default () => {
   return(
     <Router>
       <NavBar auth={auth}/>
-      <Route exact path="/" component={Scoreboard} />
+      <Route exact path="/" render={() => <Login setAuth={setAuth}/>}/>
       <Route path="/login" render={() => <Login setAuth={setAuth}/>} />
       <PrivateRoute path="/tasks" component={Tasks} />
-      <Route path="/scoreboard" component={Scoreboard} />
+      <PrivateRoute path="/scoreboard" component={Scoreboard} />
       <Route path="/admin" component={Admin} />
       <Route path="/addteam" component={AddTeam} />
     </Router>
