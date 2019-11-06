@@ -11,7 +11,7 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const timer = await Timer.findOne();
 
   if(!timer) {
-    res.json([])
+    return res.json([])
   }
 
   if (req.isAdmin) {

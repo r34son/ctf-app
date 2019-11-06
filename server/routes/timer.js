@@ -6,7 +6,7 @@ router.get('/timeLeft', async (req, res, next) => {
   const timer = await Timer.findOne();
   if (!timer) return res.json({ message: 'No timers started yet!' });
   const timeLeft = +timer.createdAt + timer.duration - Date.now();
-  if(timeLeft < 0) res.json({message: 'Timer ended'});
+  if(timeLeft < 0) return res.json({message: 'Timer ended'});
 
   res.json({ timeLeft, paused: timer.paused });
 });
