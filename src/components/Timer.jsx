@@ -42,7 +42,7 @@ export default () => {
           {time.paused !== undefined && !time.paused ? 
             `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
             : 
-            (!time.message ? 'Paused' : `${time.message}`)}
+            (!time.message ? 'Paused' : `0 hours : 0 minutes`)}
         </Typography>
       </Grid>
       }
