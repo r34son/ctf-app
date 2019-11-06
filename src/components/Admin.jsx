@@ -6,11 +6,13 @@ import {
     Switch,
     Button,
     Snackbar,
+    TextField
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 
 import InfoIcon from '@material-ui/icons/Info';
 import config from '../config'
+import moment from 'moment'
 
 const useStyles = makeStyles(theme => ({
     grid: {
@@ -26,12 +28,17 @@ const useStyles = makeStyles(theme => ({
     },
     mt10: {
         marginTop: '10px'
+    },
+    textField: {
+        flexGrow: 1,
+        marginRight: 20
     }
 }));
 
 const Admin = () => {
     const [tasks, setTasks] = useState([]);
     const [categories, setCategories] = useState([])
+    const [duration, setDuration] = useState()
 
     const [isLoading, setIsLoading] = useState(false);
     const [started, setStarted] = useState(null);
@@ -102,18 +109,18 @@ const Admin = () => {
         })))
     }, [tasks])
 
-    const turnOn = () => {
+    const turnOn = (hours) => {
         setIsLoading(true);
-        console.log('Sending request to start timer');
+        console.log('Sending request to start timer', hours);
         fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/start`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
                 'auth': localStorage.getItem('authToken')
             }, 
-            body: JSON.stringify({
-                duration: 1200000,
-            })
+            body: duration ? 
+            JSON.stringify({ duration: moment.duration(+hours, 'h').asMilliseconds() }) 
+            : JSON.stringify({ duration: 3600000 }) 
         })
         .then(response => {
             if (!response.ok) {
@@ -330,7 +337,19 @@ const Admin = () => {
                 </div>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <Typography>Включить таймер</Typography>
-                    <Button variant='contained' size='medium' color='primary' onClick={turnOn}>On</Button>
+                    <TextField
+                        id="standard-number"
+                        label="Часы"
+                        type="number"
+                        className={classes.textField}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        margin="dense"
+                        value={duration}
+                        onChange={e => setDuration(e.target.value)}
+                    />
+                    <Button variant='contained' size='medium' color='primary' onClick={() => turnOn(duration)}>On</Button>
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                         open={started}
