@@ -148,7 +148,7 @@
 {
   "category": "web",
   "title": "WEB 200",
-  "description": "Основы. Формат флага CrimeaCTF{}.[URL](http://crimea-ctf.ru/751d31dd6b56b26b29dac2c0e1839e34/)",
+  "description": "Основы. Формат флага CrimeaCTF{}.\n\n[URL](http://crimea-ctf.ru/751d31dd6b56b26b29dac2c0e1839e34/)",
   "points": 200,
   "flag": "CrimeaCTF{CTRtUXacnWcNpGEwDsWM}"
 },
@@ -174,5 +174,27 @@
   "description": "Война с war. Уже не сайт, но еще не исходникиJ Формат флага CrimeaCTF{}.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/cMPx84npVioPeCe)",
   "points": 500,
   "flag": "CrimeaCTF{y%tVYE*c@6oAjj}",
+  "enableAfter":10800000
+},
+{
+  "category": "mix",
+  "title": "Recon 100",
+  "description": "Have you celebrated the recent Halloween? Heard from many friends the word Hallowod. But only a few know its origins. Флаг – простой текст.",
+  "points": 100,
+  "flag": "CTF Flag [RIGA_20.11]"
+},
+{
+  "category": "mix",
+  "title": "Recon 200",
+  "description": "Какая резонансная частота магнитной антенны у устройства «хорда»? Флаг – простой текст.",
+  "points": 200,
+  "flag": "1000"
+},
+{
+  "category": "mix",
+  "title": "Stegano 100",
+  "description": "Как жаль, что не всё в мультфильмах является правдой. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/zzOD8iUiyR42Aq1)",
+  "points": 100,
+  "flag": "MiCk3Y_MauZ",
   "enableAfter":10800000
 }]
