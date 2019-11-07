@@ -9,8 +9,10 @@ import {
     Button,
     Divider,
     Typography,
-    makeStyles
+    makeStyles,
+    Snackbar
 } from '@material-ui/core'
+import InfoIcon from '@material-ui/icons/Info'
 
 import config from '../config'
 
@@ -35,6 +37,7 @@ const AddTeam = () => {
         password: '',
     })
 
+    const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [fetchedData, setFetchedData] = useState(null);
 
@@ -59,8 +62,13 @@ const AddTeam = () => {
             return response.json();
         })
         .then(data => {
+            setOpen(true)
             setIsLoading(false); 
             setFetchedData(data);
+            setValues({
+                team: '',
+                password: '',
+            })
         })
         .catch(err => {
             console.log(err);
@@ -110,6 +118,14 @@ const AddTeam = () => {
                     </Button>
                 </FormControl>
                 </Paper>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    open={open}
+                    onClose={() => {
+                        setOpen(false)
+                    }}
+                    message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>Команда добавлена</div>}
+                />
             </Grid>
         </Grid>
     )

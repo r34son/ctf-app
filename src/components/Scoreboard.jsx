@@ -6,9 +6,17 @@ import {
     TableHead,
     TableRow,
     Paper,
-    makeStyles
+    makeStyles,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Typography,
+    List,
+    ListItem,
+    ListItemText
 } from '@material-ui/core'
 import config from '../config'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles({
     root: {
@@ -16,6 +24,12 @@ const useStyles = makeStyles({
     },
     table: {
       minWidth: '250px',
+    },
+    broot: {
+      width: '100%',
+    },
+    heading: {
+      fontSize: 15,
     },
   });
 
@@ -58,6 +72,7 @@ const Scoreboard = () => {
     // }, [scoreboard])
 
     return (
+      <>
       <Paper className={classes.root} elevation={4}>
         <Table /*className={classes.table}*/ aria-label="simple table" stickyHeader>
           <TableHead>
@@ -85,6 +100,33 @@ const Scoreboard = () => {
           </TableBody>
         </Table>
       </Paper>
+     <Paper className={classes.root} elevation={4}>
+      {Object.keys(scoreboard).map(teamname => (
+        <ExpansionPanel key={teamname}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>{teamname}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+          {(scoreboard[teamname].length !== undefined) ?
+          (<List dense>
+            {scoreboard[teamname].map(task => (
+              <ListItem key={task.title}> 
+                <ListItemText
+                  primary={`${task.title}`}
+                />
+              </ListItem>))}
+          </List>)
+          :
+          (<Typography>Не решены</Typography>)}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        ))}
+      </Paper>
+      </>
     )
 }
 
