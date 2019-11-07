@@ -86,7 +86,7 @@ const Scoreboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(scoreboard).map(teamname => (
+            {scoreboard && Object.keys(scoreboard).map(teamname => (
               <TableRow key={teamname}>
                 <TableCell align="center" component="th" scope="row">{teamname}</TableCell>
                 <TableCell align="center">{scoreboard[teamname].length == undefined ? 
@@ -102,7 +102,7 @@ const Scoreboard = () => {
       </Paper>
      <Paper className={classes.root} elevation={4}>
      {localStorage.getItem("isAdmin") && 
-     Object.keys(scoreboard).map(teamname => (
+     scoreboard && Object.keys(scoreboard).map(teamname => (
         <ExpansionPanel key={teamname}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
