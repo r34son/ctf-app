@@ -10,7 +10,7 @@ import AddTeam from './components/AddTeam'
 import './App.css';
 
 export default () => {
-  const [auth, setAuth] = React.useState(localStorage.getItem('authToken'))
+  const [auth, setAuth] = React.useState(localStorage.getItem('authLogin'))
   return(
     <Router>
       <NavBar auth={auth}/>

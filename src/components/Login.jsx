@@ -71,7 +71,8 @@ const Login = ({ location, setAuth }) => {
         }).then(data => {
             setIsLoading(false); 
             localStorage.setItem("authToken", data.token)
-            setAuth(data.token)
+            localStorage.setItem("authLogin", data.login)
+            setAuth(data)
             if(data.isAdmin) localStorage.setItem("isAdmin", true)
             setFetchedData(data);
         }).catch(err => {

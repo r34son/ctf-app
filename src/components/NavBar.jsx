@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AppBar, Tabs, Tab } from '@material-ui/core'
+import { AppBar, Tabs, Tab} from '@material-ui/core'
 
 export default ({ auth }) => {
     const [current, setCurrent] = useState(1)
@@ -15,7 +15,8 @@ export default ({ auth }) => {
                 <Tab label='Tasks' component={Link} to='/tasks'/>
                 <Tab label='Scoreboard' component={Link} to='/scoreboard'/>
                 {!auth && <Tab label='Login' component={Link} to='/login'/>}
-                {localStorage.getItem('isAdmin') && <Tab label='Admin' component={Link} to='/admin'/>}
+                {auth && localStorage.getItem('isAdmin') && <Tab label='Admin' component={Link} to='/admin'/>}
+                {auth && <Tab label={`${auth.login} ${localStorage.getItem('isAdmin') ? '(Админ)' :''}`} disabled/>}
             </Tabs>
         </AppBar>
     )
