@@ -10,8 +10,8 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
-  if(!timer) {
-    return res.json([])
+  if(!timer || (+timer.createdAt + timer.duration - Date.now()) < 0) {
+    return res.json({ message: "Время вышло"})
   }
 
   if (req.isAdmin) {

@@ -53,6 +53,7 @@ const Tasks = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [categories, setCategories] = useState([])
+    const [end, setEnd] = useState(false)
     const classes = useStyles();
   
     const getTasks = () => {
@@ -86,10 +87,15 @@ const Tasks = () => {
     }, [])
 
     useEffect(() => {
-        setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
-            name: category,
-            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-        })))
+        if(!tasks.message){
+            setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+                name: category,
+                tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+            })))
+        } else {
+            setCategories([])
+            setEnd(true)
+        }
     }, [tasks])
 
     const submitFlag = (id) => {
@@ -129,7 +135,7 @@ const Tasks = () => {
             className={classes.root}  
             justify='center'      
         >
-            {categories.length ? categories.map(category =>
+            {categories.length != 0 ? categories.map(category =>
                 <Grid sm={12/categories.length} xs={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                     <Typography gutterBottom>
                         {category.name}
@@ -142,7 +148,7 @@ const Tasks = () => {
                     )}  
                 </Grid>
             ) : 
-            <Typography gutterBottom>No tasks!</Typography>}
+            <Typography gutterBottom>{tasks.message}</Typography>}
         </Grid>}
         <Modal
             closeAfterTransition
@@ -190,6 +196,24 @@ const Tasks = () => {
                     </Paper>
                 </Grid>
             </Fade>
+        </Modal>
+        <Modal
+            open={end}
+            className={classes.modal}
+            onClose={() => setEnd(false)}
+        >
+            <Grid 
+                md={3}
+                className={classes.grid} 
+            >
+                <Paper className={classes.paper}>
+                    <Chip 
+                        variant='outlined'
+                        color='secondary'
+                        label={'Время вышло, флаги больше не принимаются!'}
+                    />
+                </Paper>
+            </Grid>
         </Modal>
       </>
     )

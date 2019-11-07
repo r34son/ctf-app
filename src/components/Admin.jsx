@@ -103,10 +103,14 @@ const Admin = () => {
     }, [])
 
     useEffect(() => {
-        setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
-            name: category,
-            tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
-        })))
+        if(!tasks.message){
+            setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+                name: category,
+                tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
+            })))
+        } else {
+            setCategories([])
+        }
     }, [tasks])
 
     const turnOn = (hours) => {
@@ -296,7 +300,7 @@ const Admin = () => {
                 md={9}    
                 className={classes.root}        
             >
-                {categories.map(category =>
+                {categories.length != 0 ? categories.map(category =>
                     <Grid sm={12/categories.length} container direction='column' alignItems='center' key={category.name}>
                         <Typography gutterBottom>
                             {category.name}
@@ -308,7 +312,8 @@ const Admin = () => {
                             </div>
                         )}  
                     </Grid>
-                )}
+                ):
+                <Typography gutterBottom>{tasks.message}</Typography>}
             </Grid>
             <Grid
                 md={3}
