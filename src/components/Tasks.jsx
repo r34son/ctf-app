@@ -206,7 +206,7 @@ const Tasks = () => {
                 md={3}
                 className={classes.grid} 
             >
-                <Paper className={classes.paper}>
+                <Paper className={classes.paper} style={{ display: 'flex', justifyContent:'center'}}>
                     <Chip 
                         variant='outlined'
                         color='secondary'
