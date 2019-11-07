@@ -10,10 +10,11 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
-  if(!timer || (+timer.createdAt + timer.duration - Date.now()) < 0) {
-    return res.json({ message: "Время вышло"})
+  if(!req.isAdmin){
+    if(!timer || (+timer.createdAt + timer.duration - Date.now()) < 0) {
+      return res.json({ message: "Время вышло"})
+    }
   }
-
   if (req.isAdmin) {
     const tasksWithEnabled = tasks.map(task => ({
       ...task.toObject(),
