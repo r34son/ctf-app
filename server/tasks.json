@@ -86,4 +86,41 @@
   "points": 500,
   "flag": "sponge_bob_square_roots",
   "enableAfter": 10800000
+},
+{
+  "category": "ppc",
+  "title": "PPC 100",
+  "description": "Мы получили сообщения с датами создания. Наш канал был небезопасным, и наряду с правильными сообщениями мы получали сообщения с неправильными временными метками - их необходимо отфильтровать.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/ZaX5BsapJ4gxBnk)",
+  "points": 100,
+  "flag": "4eec2cd9e4bb0062d0e41c8af1bd8a0f"
+},
+{
+  "category": "ppc",
+  "title": "PPC 200",
+  "description": "451 ° цветового круга. Присмотрись. Начните все сначала. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/PZigqHrzKFgNWyf)",
+  "points": 200,
+  "flag": "7a84f81d85555d8019d6ccf07913c549"
+},
+{
+  "category": "ppc",
+  "title": "PPC 300",
+  "description": "HTTP 451. Мы нашли древнюю библиотеку, которая, к счастью, пережила пожар. Теперь нам нужно выяснить, когда он был создан. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/kjoQ0B8bLVc4j1W)",
+  "points": 300,
+  "flag": "7a84f81d85555d8019d6ccf07913c549"
+},
+{
+  "category": "ppc",
+  "title": "PPC 400",
+  "description": "1 + 9 + 8 + 4. Чтобы скрыть свои сообщения от Большого Брата, члены Братства изобрели код. Кажется, нам нужен калькулятор. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/OLyTA6AAZ9PtF38)",
+  "points": 400,
+  "flag": "54f4a870b138f8d3afb38296abec4773",
+  "enableAfter": 7200000
+},
+{
+  "category": "ppc",
+  "title": "PPC 500",
+  "description": "La Matrice Rechargée¿Cuánto es dos más de tres millones? Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/g4vw5pekf13QdV8)",
+  "points": 500,
+  "flag": "fbefc690b15a7816643aa9f5231f86e5",
+  "enableAfter": 10800000
 }]
