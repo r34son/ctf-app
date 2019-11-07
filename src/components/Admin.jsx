@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     },
     root: {
         margin: '20px 0px',
-        padding: '15px',
+        padding: '15px'
     },
     mt20: {
         marginTop: '20px'
@@ -296,12 +296,12 @@ const Admin = () => {
         <Grid container md={12} justifyContent='space-between'>
             <Grid 
                 container 
-                spacing={3} 
+                spacing={3}
                 md={9}    
                 className={classes.root}        
             >
                 {categories.length != 0 ? categories.map(category =>
-                    <Grid sm={12/categories.length} container direction='column' alignItems='center' key={category.name}>
+                    <Grid sm={Math.floor(12/categories.length)} container direction='column' alignItems='center' key={category.name}>
                         <Typography gutterBottom>
                             {category.name}
                         </Typography>
@@ -317,6 +317,7 @@ const Admin = () => {
             </Grid>
             <Grid
                 md={3}
+                spacing={3}
                 container
                 className={classes.root}        
             >
