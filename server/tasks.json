@@ -196,4 +196,12 @@
   "description": "Как жаль, что не всё в мультфильмах является правдой. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/zzOD8iUiyR42Aq1)",
   "points": 100,
   "flag": "MiCk3Y_MauZ"
+},
+{
+  "category": "mix",
+  "title": "Stegano 250",
+  "description": "Если бы у Штирлица был современный компьютер… Именно герой знаменитого сериала бы первым создал это. Флаг – простой текст.\n\n[URL](https://vk.com/away.php?utf=1&to=https%3A%2F%2Fcloud.cfuv-it.ru%2Fowncloud%2Findex.php%2Fs%2FovCHbdyO2993MWD)",
+  "points": 250,
+  "flag": "hello_brothers",
+  "enableAfter":7200000
 }]
