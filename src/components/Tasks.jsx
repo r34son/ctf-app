@@ -15,6 +15,7 @@ import {
     Snackbar 
 } from '@material-ui/core';
 import ReactMarkdown from 'react-markdown';
+import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
 import Timer from './Timer'
 import Loader from './Loader'
@@ -54,6 +55,8 @@ const Tasks = () => {
     const [tasks, setTasks] = useState([]);
     const [categories, setCategories] = useState([])
     const [end, setEnd] = useState(false)
+    const [status, setStatus] = useState()
+    const [submit, setSubmit] = useState()
     const classes = useStyles();
   
     const getTasks = () => {
@@ -92,9 +95,11 @@ const Tasks = () => {
                 name: category,
                 tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
             })))
+            setTask(tasks.filter(a => a._id == task._id)[0] || {})
         } else {
             setCategories([])
             setEnd(true)
+            setOpen(false)
         }
     }, [tasks])
 
@@ -117,9 +122,14 @@ const Tasks = () => {
         }).then(data => {
             setIsLoading(false); 
             getTasks()
-            setOpen(false)
+            // setOpen(false)
+            setStatus(true) 
+            setSubmit(true)
+            console.log('submit flag data', data)
         }).catch(err => {
             console.log(err);
+            setStatus(false)
+            setSubmit(true)
             setIsLoading(false);
         })
     }
@@ -141,10 +151,18 @@ const Tasks = () => {
                         {category.name}
                     </Typography>
                     {category.tasks.map(({ points, ...task }) => 
-                        <Chip key={task.title} className={classes.mt20} label={points} onClick={() => { 
-                            setTask(task)
-                            setOpen(true)
-                        }}/>
+                        <Chip 
+                            key={task.title} 
+                            className={classes.mt20} 
+                            label={points} 
+                            color={task.solved ? 'primary': 'default'}
+                            icon={task.solved ? <DoneIcon />: null}
+                            //variant={task.solved ? 'outlined': 'default'}
+                            onClick={() => { 
+                                setTask(task)
+                                setOpen(true)
+                            }}
+                        />
                     )}  
                 </Grid>
             ) : 
@@ -215,6 +233,12 @@ const Tasks = () => {
                 </Paper>
             </Grid>
         </Modal>
+        <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            open={submit}
+            onClose={() => setSubmit(false)}
+            message={<div style={{display: 'flex', alignItems: 'center', }}><InfoIcon style={{ marginRight: '20px'}}/>{status ? 'Флаг принят' : "Неверный флаг"}</div>}
+        />
       </>
     )
 }
