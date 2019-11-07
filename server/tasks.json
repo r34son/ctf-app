@@ -1,29 +1,89 @@
 [{
-  "category": "forensics",
-  "title": "Forensics 100",
-  "description": "С этим изображением что-то не так. Разберитесь!\n\n[URL](https://google.com)",
+  "category": "forensic",
+  "title": "Forensic 50",
+  "description": "На жестком диске злоумышленника нашли картинку и странный программный код. Разберитесь, можно ли оттуда извлечь ключ доступа? Флаг – простой текст. \n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/lZfFJrwUxoOaJVk)",
+  "points": 50,
+  "flag": "327"
+},
+{
+  "category": "forensic",
+  "title": "Forensic 100",
+  "description": "С этим изображением что-то не так. Разберитесь!\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/JBWK9VFDORf8qi8)",
   "points": 100,
-  "flag": "CTF{4F6C8337CD90157001DAFF658F314DDB}",
-  "enableAfter": 50000
+  "flag": "4F6C8337CD90157001DAFF658F314DDB"
 },
 {
-  "category": "forensics",
-  "title": "Forensics 200",
-  "description": "Вы умеете «взламывать» пароли в PDF? :)",
+  "category": "forensic",
+  "title": "Forensic 200",
+  "description": "Вы умеете «взламывать» пароли в PDF? :) Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/rlXlp3owkv4OSwM)",
   "points": 200,
-  "flag": "CTF{J4v4scr1pt__D1gg3r}"
+  "flag": "J4v4scr1pt__D1gg3r"
 },
 {
-  "category": "forensics",
-  "title": "Forensics 300",
-  "description": "Нами был задержан подозреваемый по обвинению в неправомерном доступе к компьютерной информации. Мы считаем, что путем взлома, злоумышленник получил доступ к чужому аккаунту и воспользовался этим. Нам повезло и удалось добыть дамп памяти его виртуальной машины, с которой предположительно осуществлялся взлом. Выясните, к какой информации злоумышленник смог получить доступ.",
+  "category": "forensic",
+  "title": "Forensic 250",
+  "description": "В порту задержали посредника, который должен был передать электронный ключ или код. При нем нашли флеш-карту, содержимое которой вам отправлено на анализ. Всё, что удалось добиться от посредника – A1 D1. Постарайтесь добыть ключ! Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/2NdYrw5vWRWaOm7)",
+  "points": 250,
+  "flag": "769"
+},
+{
+  "category": "forensic",
+  "title": "Forensic 300",
+  "description": "В секретном конструкторском бюро DLP-система обнаружила передачу этого файла на неизвестный email. Разберитесь.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/RrSjNEkKLr6aw5I)",
   "points": 300,
-  "flag": "CTF{D0nt_us3_s4m3_p4ssw0rd_f0r_m4ny_pl4c3s}"
+  "flag": "12-865J 574-3R 556-zA",
+  "enableAfter": 3600000
 },
 {
-  "category": "forensics",
-  "title": "Forensics 400",
-  "description": "Мы снова расследуем случай взлома нашего клиента. Выясните, что случилось на этот раз.",
+  "category": "forensic",
+  "title": "Forensic 400",
+  "description": "Нами был задержан подозреваемый по обвинению в неправомерном доступе к компьютерной информации. Мы считаем, что путем взлома, злоумышленник получил доступ к чужому аккаунту и воспользовался этим. Нам повезло и удалось добыть дамп памяти его виртуальной машины, с которой предположительно осуществлялся взлом. Выясните, к какой информации злоумышленник смог получить доступ. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/ZDphhUbmL6wxXtP)",
   "points": 400,
-  "flag": "CTF{m3g4mozzzg_private_foto}"
+  "flag": "D0nt_us3_s4m3_p4ssw0rd_f0r_m4ny_pl4c3s",
+  "enableAfter": 7200000
+},
+{
+  "category": "forensic",
+  "title": "Forensic 500",
+  "description": "Мы снова расследуем случай взлома нашего клиента. Выясните, что случилось на этот раз. Флаг – простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/C0ZswtA9mFZbo9Z)",
+  "points": 500,
+  "flag": "m3g4mozzzg_private_foto",
+  "enableAfter": 10800000
+},
+{
+  "category": "crypto",
+  "title": "Crypto 100",
+  "description": "Флаг – простой текст. Зашифрованное сообщение: GGTTCAATGGGCTTGTCAATGGTTCGCATATCCATGGGCACGGTTCGCGGCTCA",
+  "points": 100,
+  "flag": "friedrich_miescher"
+},
+{
+  "category": "crypto",
+  "title": "Crypto 200",
+  "description": "Уже ноябрь, в Крыму еще тепло, а где-то уже во всю кружаться снежинки! Флаг - простой текст. Зашифрованное сообщение: <br>alos<br>arfxi<br>idymmy<br>alsetr",
+  "points": 200,
+  "flag": "six-fold_radial_symmetry"
+},
+{
+  "category": "crypto",
+  "title": "Crypto 300",
+  "description": "Алиса и Боб переписываются необычным способом: она отправляет ему QR-код, а он отвечает ей штрихкодами. Часть их переписки на рисунках. Найдите флаг в сообщении Боба. Флаг - простой текст. [URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/h1NP1FhHLNhYS93)",
+  "points": 300,
+  "flag": "bernard_silver"
+},
+{
+  "category": "crypto",
+  "title": "Crypto 400",
+  "description": "Алиса, Боб и Кэмерон хотят получить общий ключ по методу Диффи-Хеллмана. Их открытые ключи g ^ a mod p, g ^ b mod p, g ^ c mod p соответственно. Смогут ли Алиса и Боб получить общий ключ без личного ключа Кэмерон? Флаг - это первые 20 цифр общего ключа в десятичной форме.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/lUklSN7TVOY2KMc)",
+  "points": 400,
+  "flag": "38058349620867258480",
+  "enableAfter": 7200000
+},
+{
+  "category": "crypto",
+  "title": "Crypto 500",
+  "description": "Зашифрованный текст c является результатом шифрования RSA с (n, e) открытым ключом. Флаг - простой текст.\n\n[URL](https://cloud.cfuv-it.ru/owncloud/index.php/s/dqLwtUcJGncPCDs)",
+  "points": 500,
+  "flag": "sponge_bob_square_roots",
+  "enableAfter": 10800000
 }]

@@ -14,7 +14,7 @@ import {
     Button,
     Snackbar 
 } from '@material-ui/core';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from 'react-markdown/with-html';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
 import Timer from './Timer'
@@ -193,7 +193,7 @@ const Tasks = () => {
                         </Typography>
                         <Divider />
                         <Typography className={classes.mt10}>
-                            <ReactMarkdown source={task.description} />
+                            <ReactMarkdown source={task.description} escapeHtml={false} />
                         </Typography>
                         {task.solved ?
                         <Chip className={classes.mt20} label={'Task solved'} />
@@ -204,7 +204,7 @@ const Tasks = () => {
                                 value={flag}
                                 onChange={(e) => setFlag(e.target.value)}
                                 margin='none'
-                                placeholder='CTF{...}'
+                                placeholder='flag...'
                                 style={{flexGrow: '1', marginRight: '15px'}}
                             />
                             <Button variant='contained' size='medium' color='primary' onClick={() => submitFlag(task._id)}>

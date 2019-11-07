@@ -101,7 +101,8 @@ const Scoreboard = () => {
         </Table>
       </Paper>
      <Paper className={classes.root} elevation={4}>
-      {Object.keys(scoreboard).map(teamname => (
+     {localStorage.getItem("isAdmin") && 
+     Object.keys(scoreboard).map(teamname => (
         <ExpansionPanel key={teamname}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
