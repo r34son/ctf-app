@@ -88,7 +88,7 @@ const Tasks = () => {
 
     useEffect(() => {
         if(!tasks.message){
-            setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
+            tasks.length != 0 && setCategories(Array.from(new Set(tasks.map(task => task.category))).map(category => ({
                 name: category,
                 tasks: tasks.filter(task => task.category == category).map(({category, ...task}) => task)
             })))
