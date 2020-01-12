@@ -1,51 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import { Grid, Typography } from '@material-ui/core'
-import Loader from './Loader'
-import moment from 'moment'
-import config from '../config'
+import React, { useState, useEffect } from 'react';
+import { Grid, Typography } from '@material-ui/core';
+import moment from 'moment';
+import 'moment-duration-format';
+import withSocket from '../hoc/withSocket';
 
-export default () => {
-  const [isLoading, setIsLoading] = useState(false);
+const Timer = ({ socket }) => {
   const [time, setTime] = useState(null);
 
-  const getTimeLeft = () => {
-    setIsLoading(true);
-    fetch(`${config.protocol}://${config.server}:${config.port}/api/timer/timeLeft`)
-    .then(response => {
-        if (!response.ok) {
-        throw new Error('Failed to fetch.');
-        }
-        return response.json();
-    })
-    .then(data => {
-      console.log(data)
-        setIsLoading(false); 
-        setTime(data);
-    })
-    .catch(err => {
-        console.log(err);
-        setIsLoading(false);
-    })
-  }
-
   useEffect(() => {
-    getTimeLeft(); 
-    const timer = setInterval(getTimeLeft, 30000)
-    return () => clearInterval(timer)
-  }, [])
+    socket.on('timer:tick', setTime);
+  }, [socket]);
 
-  return ( 
+  return (
     <>
-      {isLoading ? <Loader /> : 
-       time && <Grid container justify='flex-end'>
-        <Typography style={{ margin: '50px'}}>
-          {time.paused !== undefined && !time.paused ? 
-            `${moment.duration(time.timeLeft).hours()} hours : ${moment.duration(time.timeLeft).minutes()} minutes` 
-            : 
-            (!time.message ? 'Paused' : `0 hours : 0 minutes`)}
-        </Typography>
-      </Grid>
-      }
+      {time !== null && (
+        <Grid container justify='center'>
+          <Typography style={{ margin: '50px' }} variant='h4'>
+            {moment.duration(time).format('h:mm:ss')}
+          </Typography>
+        </Grid>
+      )}
     </>
-  )
-}
+  );
+};
+
+export default withSocket(Timer);

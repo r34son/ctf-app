@@ -10,17 +10,20 @@ router.get('/', verifyToken(), async (req, res, next) => {
   const user = await User.findById(req.userId);
   const timer = await Timer.findOne();
 
-  if(!req.isAdmin){
-    if(!timer || (+timer.createdAt + timer.duration - Date.now()) < 0) {
-      return res.json({ message: "Время вышло"})
+  if (!req.isAdmin) {
+    if (!timer || timer.time < 0) {
+      return res.json({ message: 'Время вышло' });
     }
   }
   if (req.isAdmin) {
     const tasksWithEnabled = tasks.map(task => ({
       ...task.toObject(),
-      enabled: task.force > 0 || (+task.force === 0 && +timer.createdAt + +task.enableAfter < Date.now()),
+      enabled:
+        task.force > 0 ||
+        +task.force ===
+          0 /*&& +timer.createdAt + +task.enableAfter < Date.now()*/
     }));
-  
+
     return res.json(tasksWithEnabled);
   }
 
@@ -28,16 +31,24 @@ router.get('/', verifyToken(), async (req, res, next) => {
     return task.enableAfter !== 0 || user.solvedTasks.indexOf(task._id) !== -1;
   });
 
-  const parsedTasks = tasks.filter(task => {
-    return task.force > 0 || solvedAllInititalTasks || (+task.force === 0 && (+task.enableAfter === 0 || +timer.createdAt + +task.enableAfter < Date.now()));
-  }).map(task => {
-    const { flag, ...noFlag } = task.toObject();
+  const parsedTasks = tasks
+    .filter(task => {
+      return (
+        task.force > 0 ||
+        solvedAllInititalTasks ||
+        (+task.force === 0 &&
+          +task.enableAfter ===
+            0 /*|| +timer.createdAt + +task.enableAfter < Date.now()*/)
+      );
+    })
+    .map(task => {
+      const { flag, ...noFlag } = task.toObject();
 
-    return {
-      ...noFlag,
-      solved: user.solvedTasks.indexOf(task._id) !== -1,
-    };
-  });
+      return {
+        ...noFlag,
+        solved: user.solvedTasks.indexOf(task._id) !== -1
+      };
+    });
 
   res.json(parsedTasks);
 });
@@ -47,7 +58,7 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
 
   try {
     const users = await User.find({ isAdmin: false });
-    
+
     for (let i = 0; i < users.length; ++i) {
       let team = [];
 
@@ -66,7 +77,10 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
     const simpleScoreboard = {};
 
     Object.keys(scoreboard).map(user => {
-      simpleScoreboard[user] = scoreboard[user].reduce((score, task) => score + +task.points, 0);
+      simpleScoreboard[user] = scoreboard[user].reduce(
+        (score, task) => score + +task.points,
+        0
+      );
     });
 
     return res.json({ scoreboard: simpleScoreboard });
@@ -76,7 +90,14 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
 });
 
 router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
-  const { title, description, flag, category, points, enableAfter = 0 } = req.body;
+  const {
+    title,
+    description,
+    flag,
+    category,
+    points,
+    enableAfter = 0
+  } = req.body;
 
   try {
     const hash = await bcrypt.hash(flag, 10);
@@ -86,7 +107,7 @@ router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
       flag: hash,
       category,
       points,
-      enableAfter,
+      enableAfter
     });
 
     res.json(task);
@@ -98,19 +119,22 @@ router.post('/add', verifyToken({ isAdmin: true }), async (req, res, next) => {
 router.post('/submit/:id', verifyToken(), async (req, res, next) => {
   const timer = await Timer.findOne();
 
-  if (!timer || timer.paused || (timer.createdAt + timer.duration) < Date.now()) return res.status(400).json({ error: 'Flags are not currenty accepted' });
+  if (!timer || timer.paused || timer.createdAt + timer.duration < Date.now())
+    return res.status(400).json({ error: 'Flags are not currenty accepted' });
 
-  console.log((timer.createdAt + timer.duration) < Date.now())
+  console.log(timer.createdAt + timer.duration < Date.now());
   const { id: taskId } = req.params;
   const { flag } = req.body;
   const user = await User.findById(req.userId);
 
-  if (user.solvedTasks.indexOf(taskId) !== -1) return res.status(400).json({ error: 'Task already solved' });
+  if (user.solvedTasks.indexOf(taskId) !== -1)
+    return res.status(400).json({ error: 'Task already solved' });
 
   const task = await Task.findById(taskId);
 
-  if (task.force < 0 || timer.createdAt + task.enableAfter > Date.now()) return res.status(400).json({ error: 'Task in not currently enabled' });
-  
+  if (task.force < 0 || timer.createdAt + task.enableAfter > Date.now())
+    return res.status(400).json({ error: 'Task in not currently enabled' });
+
   bcrypt.compare(flag, task.flag, async (err, correct) => {
     if (err) return res.status(401).json({ error: 'Submition failed' });
     else if (!correct) return res.status(400).json({ error: 'Wrong flag' });
@@ -118,35 +142,45 @@ router.post('/submit/:id', verifyToken(), async (req, res, next) => {
     user.solvedTasks.push(task._id);
     await user.save();
 
-    res.json({ solvedTask: task._id }); 
+    res.json({ solvedTask: task._id });
   });
 });
 
-router.post('/force',  verifyToken({ isAdmin: true }), async (req, res, next) => {
-  const { force, taskId } = req.body;
-  const task = await Task.findById(taskId);
+router.post(
+  '/force',
+  verifyToken({ isAdmin: true }),
+  async (req, res, next) => {
+    const { force, taskId } = req.body;
+    const task = await Task.findById(taskId);
 
-  task.force = force;
-  await task.save();
+    task.force = force;
+    await task.save();
 
-  res.json(task);
-});
-
-router.get('/migrate', verifyToken({ isAdmin: true }), async (req, res, next) => {
-  const parsedTasks = JSON.parse(fs.readFileSync(path.join(__dirname, '../tasks.json')).toLocaleString());
-
-  try {
-    await Task.deleteMany();
-
-    for (let i = 0; i < parsedTasks.length; ++i) {
-      parsedTasks[i].flag = await bcrypt.hash(parsedTasks[i].flag, 10);
-      await Task.create(parsedTasks[i]);
-    }
-  } catch (e) {
-    return res.json({ error: 'Oops, something went wrong', details: e });
+    res.json(task);
   }
+);
 
-  res.json({ message: 'Tasks migrate succesefully' });
-});
+router.get(
+  '/migrate',
+  verifyToken({ isAdmin: true }),
+  async (req, res, next) => {
+    const parsedTasks = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '../tasks.json')).toLocaleString()
+    );
+
+    try {
+      await Task.deleteMany();
+
+      for (let i = 0; i < parsedTasks.length; ++i) {
+        parsedTasks[i].flag = await bcrypt.hash(parsedTasks[i].flag, 10);
+        await Task.create(parsedTasks[i]);
+      }
+    } catch (e) {
+      return res.json({ error: 'Oops, something went wrong', details: e });
+    }
+
+    res.json({ message: 'Tasks migrate succesefully' });
+  }
+);
 
 module.exports = router;

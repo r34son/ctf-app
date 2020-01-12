@@ -1,19 +1,18 @@
 const mongoose = require('mongoose');
 
 const timerSchema = new mongoose.Schema({
-  createdAt: {
-    type: Date,
-    required: true,
+  time: {
+    type: Number,
+    required: true
   },
   duration: {
     type: Number,
-    required: true,
+    required: true
   },
-  paused: {
-    type: Boolean,
-    default: false,
-  },
-  pausedAt: Date,
+  state: {
+    type: String,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Timer', timerSchema);
