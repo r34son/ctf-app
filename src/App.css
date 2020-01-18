@@ -25,10 +25,18 @@
   }
 }
 
-.container {
-  height: 90%;
+.flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.container {
+  height: 90%;
   margin: 20px;
+}
+
+.timer {
+  font-family: Orbitron !important;
+  width: 100px;
 }

@@ -1,21 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { getData } from '../utils';
+import userContext from '../contexts/userContext';
 
-export default ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      getData() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/login',
-            state: { from: props.location }
-          }}
-        />
-      )
-    }
-  />
-);
+export default ({ component: Component, ...rest }) => {
+  const [user] = useContext(userContext);
+
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        user.token ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  )
+};

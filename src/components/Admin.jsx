@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -14,8 +14,8 @@ import Loader from './Loader';
 
 import InfoIcon from '@material-ui/icons/Info';
 import api from '../api';
-import { getData } from '../utils';
-import withSocket from '../hoc/withSocket';
+import socketContext from '../contexts/socketContext'
+import userContext from "../contexts/userContext";
 
 const useStyles = makeStyles(theme => ({
   grid: {
@@ -34,22 +34,21 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     flexGrow: 1,
-    marginRight: 20
+    marginRight: 20,
+    marginLeft: 20 
   }
 }));
 
-const Admin = ({ socket }) => {
+const Admin = () => {
   const [tasks, setTasks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [duration, setDuration] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-  const [started, setStarted] = useState(null);
-  const [paused, setPaused] = useState(null);
-  const [stoped, setStoped] = useState(null);
-  const [resumed, setResumed] = useState(null);
   const [migrated, setMigrated] = useState(null);
   const [msg, setMsg] = useState('');
+  const socket = useContext(socketContext);
+  const [{ isAdmin }] = useContext(userContext);
 
   const getTasks = () => {
     setIsLoading(true);
@@ -92,10 +91,9 @@ const Admin = ({ socket }) => {
   const start = duration => {
     socket.emit(
       'timer:start',
-      moment.duration(+duration, 'hours').asMilliseconds()
+      moment.duration(duration).asMilliseconds()
     );
   };
-
   const stop = () => socket.emit('timer:stop');
   const pause = () => socket.emit('timer:pause');
   const resume = () => socket.emit('timer:resume');
@@ -134,7 +132,7 @@ const Admin = ({ socket }) => {
 
   const classes = useStyles();
 
-  return !getData().isAdmin ? (
+  return !isAdmin ? (
     <Typography>You should be admin to see that</Typography>
   ) : (
     <Grid container item md={12}>
@@ -160,12 +158,10 @@ const Admin = ({ socket }) => {
             >
               <Typography gutterBottom>{category.name}</Typography>
               {category.tasks.map(({ _id, points, enabled }) => (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center'
-                  }}
+                <Grid
+                  container
+                  justify='space-evenly'
+                  alignItems='center'
                   key={_id}
                 >
                   <Typography>{points}</Typography>
@@ -174,7 +170,7 @@ const Admin = ({ socket }) => {
                     onChange={() => onToggle(_id, enabled)}
                     color='primary'
                   />
-                </div>
+                </Grid>
               ))}
             </Grid>
           ))
@@ -183,15 +179,7 @@ const Admin = ({ socket }) => {
         )}
       </Grid>
       <Grid item md={3} spacing={3} container className={classes.root}>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
-        >
+        <Grid item container justify='space-between'>
           <Typography>Поставить на паузу таймер</Typography>
           <Button
             variant='contained'
@@ -201,27 +189,8 @@ const Admin = ({ socket }) => {
           >
             Pause
           </Button>
-          <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            open={paused}
-            onClose={() => setPaused(false)}
-            message={
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <InfoIcon style={{ marginRight: '20px' }} />
-                {msg}
-              </div>
-            }
-          />
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
-        >
+        </Grid>
+        <Grid item container justify='space-between'>
           <Typography>Продолжить таймер</Typography>
           <Button
             variant='contained'
@@ -231,35 +200,19 @@ const Admin = ({ socket }) => {
           >
             Resume
           </Button>
-          <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            open={resumed}
-            onClose={() => setResumed(false)}
-            message={
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <InfoIcon style={{ marginRight: '20px' }} />
-                {msg}
-              </div>
-            }
-          />
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
+        </Grid>
+        <Grid
+          item
+          container
+          justify='space-between'
+          alignItems='center'
+          wrap='nowrap'
         >
           <Typography>Включить таймер</Typography>
           <TextField
-            id='standard-number'
-            label='Часы'
-            type='number'
+            type='time'
             className={classes.textField}
-            style={{ marginLeft: 10 }}
-            margin='dense'
+            margin='none'
             value={duration}
             onChange={e => setDuration(e.target.value)}
           />
@@ -271,27 +224,8 @@ const Admin = ({ socket }) => {
           >
             On
           </Button>
-          <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            open={started}
-            onClose={() => setStarted(false)}
-            message={
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <InfoIcon style={{ marginRight: '20px' }} />
-                {msg}
-              </div>
-            }
-          />
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
-        >
+        </Grid>
+        <Grid item container justify='space-between'>
           <Typography>Выключить таймер</Typography>
           <Button
             variant='contained'
@@ -301,27 +235,8 @@ const Admin = ({ socket }) => {
           >
             Off
           </Button>
-          <Snackbar
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-            open={stoped}
-            onClose={() => setStoped(false)}
-            message={
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <InfoIcon style={{ marginRight: '20px' }} />
-                {msg}
-              </div>
-            }
-          />
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
-        >
+        </Grid>
+        <Grid item container justify='space-between'>
           <Typography>Обновить задания</Typography>
           <Button
             variant='contained'
@@ -342,16 +257,8 @@ const Admin = ({ socket }) => {
               </div>
             }
           />
-        </div>
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '20px'
-          }}
-        >
+        </Grid>
+        <Grid item container justify='space-between'>
           <Typography>Добавить команду</Typography>
           <Button
             variant='contained'
@@ -362,10 +269,10 @@ const Admin = ({ socket }) => {
           >
             Add
           </Button>
-        </div>
+        </Grid>
       </Grid>
     </Grid>
   );
 };
 
-export default withSocket(Admin);
+export default Admin;

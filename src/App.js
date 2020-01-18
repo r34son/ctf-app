@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import NavBar from './components/NavBar';
@@ -10,25 +10,37 @@ import AddTeam from './components/AddTeam';
 import './App.css';
 
 import SocketContext from './contexts/socketContext';
+import UserContext from './contexts/userContext';
+import { getData, setData } from './utils';
 import io from 'socket.io-client';
-import config from './config';
-
-const socket = io(`${config.protocol}://${config.server}:${config.port}`);
-
-socket.on('connect', () => console.log('socket connected'));
+import { protocol, server, port } from './config';
 
 export default () => {
+  const [user, setUser] = useState(getData() || {});
+  const [socket, setSocket] = useState();
+
+  useEffect(() => {
+    if (user.token) {
+      const socket = io(`${protocol}://${server}:${port}?token=${user.token}`);
+      socket.on('connect', () => console.log('socket connected'));
+      setSocket(socket);
+      setData(user);
+    }
+  }, [user]);
+
   return (
     <SocketContext.Provider value={socket}>
-      <Router>
-        <NavBar />
-        <Route exact path='/' component={Login} />
-        <Route path='/login' component={Login} />
-        <PrivateRoute path='/tasks' component={Tasks} />
-        <PrivateRoute path='/scoreboard' component={Scoreboard} />
-        <Route path='/admin' component={Admin} />
-        <Route path='/addteam' component={AddTeam} />
-      </Router>
+      <UserContext.Provider value={[user, setUser]}>
+        <Router>
+          <NavBar />
+          <Route exact path='/' component={user.token ? Tasks : Login} />
+          <Route path='/login' component={Login} />
+          <PrivateRoute path='/tasks' component={Tasks} />
+          <PrivateRoute path='/scoreboard' component={Scoreboard} />
+          <Route path='/admin' component={Admin} />
+          <Route path='/addteam' component={AddTeam} />
+        </Router>
+      </UserContext.Provider>
     </SocketContext.Provider>
   );
 };

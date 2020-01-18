@@ -15,19 +15,10 @@ const Timer = function(onTick) {
   this.timer = undefined;
 
   TimerModel.findOne().then(timer => {
-    switch (timer.state) {
-      case 'running':
-        this.time = timer.time;
-        this.timer = timer;
-        setIntervals();
-        break;
-      case 'paused':
-        this.time = timer.time;
-        this.timer = timer;
-        onTick(timer.time);
-        break;
-      default:
-        break;
+    if (timer) {
+      this.time = timer.time;
+      this.timer = timer;
+      timer.state === "running" && setIntervals();
     }
   });
 
@@ -35,11 +26,14 @@ const Timer = function(onTick) {
     this.interval = setInterval(this.onTick, this.second);
     this.updateInterval = setInterval(
       async () =>
-        await TimerModel.updateOne(this.timer, {
-          $set: {
-            time: this.time
+        await TimerModel.updateOne(
+          { _id: this.timer._id },
+          {
+            $set: {
+              time: this.time
+            }
           }
-        }),
+        ),
       this.minute
     );
   };
@@ -55,10 +49,12 @@ const Timer = function(onTick) {
     // if (this.interval) {
     //   return;
     // }
+    if (time <= 0) {
+      return;
+    }
     if (this.interval) {
       this.stop();
     }
-    console.log('Starting Timer!', time);
     this.time = time;
     await TimerModel.deleteMany();
     this.timer = await TimerModel.create({
@@ -70,31 +66,43 @@ const Timer = function(onTick) {
   };
 
   this.pause = async () => {
-    console.log('Pausing Timer!', this.time);
     clearIntervals();
-    await TimerModel.updateOne(this.timer, {
-      $set: {
-        time: this.time,
-        state: 'paused'
+    await TimerModel.updateOne(
+      { _id: this.timer._id },
+      {
+        $set: {
+          time: this.time,
+          state: 'paused'
+        }
       }
-    });
+    );
   };
 
-  this.resume = () => {
-    console.log('Resuming Timer!', this.time);
+  this.resume = async () => {
     setIntervals();
+    await TimerModel.updateOne(
+      { _id: this.timer._id },
+      {
+        $set: {
+          time: this.time,
+          state: 'running'
+        }
+      }
+    );
   };
 
   this.stop = async () => {
-    console.log('Stopping Timer!');
     clearIntervals();
     this.time = 0;
-    await TimerModel.updateOne(this.timer, {
-      $set: {
-        time: 0,
-        state: 'stopped'
+    await TimerModel.updateOne(
+      { _id: this.timer._id },
+      {
+        $set: {
+          time: 0,
+          state: 'stopped'
+        }
       }
-    });
+    );
     onTick(0);
   };
 

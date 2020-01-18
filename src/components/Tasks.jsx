@@ -17,7 +17,6 @@ import {
 import ReactMarkdown from 'react-markdown/with-html';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
-import Timer from './Timer';
 import Loader from './Loader';
 
 import api from '../api';
@@ -77,7 +76,7 @@ const Tasks = () => {
   useEffect(() => {
     getTasks();
     const timer = setInterval(getTasks, 60000);
-    return () => clearTimeout(timer);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -122,7 +121,6 @@ const Tasks = () => {
 
   return (
     <>
-      <Timer />
       {isLoading ? (
         <Loader />
       ) : (
@@ -148,7 +146,6 @@ const Tasks = () => {
                     label={points}
                     color={task.solved ? 'primary' : 'default'}
                     icon={task.solved ? <DoneIcon /> : null}
-                    //variant={task.solved ? 'outlined': 'default'}
                     onClick={() => {
                       setTask(task);
                       setOpen(true);

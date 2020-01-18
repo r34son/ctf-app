@@ -70,7 +70,7 @@ router.get('/scoreboard', verifyToken(), async (req, res, next) => {
       scoreboard[users[i].login] = team;
     }
   } catch (e) {
-    res.json({ error: 'Oops, something went wrong!', details: e });
+    return res.json({ error: 'Oops, something went wrong!', details: e });
   }
 
   if (!req.isAdmin) {

@@ -1,27 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import React, { useState, useEffect, useContext } from 'react';
+import { Typography } from '@material-ui/core';
 import moment from 'moment';
 import 'moment-duration-format';
-import withSocket from '../hoc/withSocket';
+import socketContext from '../contexts/socketContext'
 
-const Timer = ({ socket }) => {
+const Timer = ({ update }) => {
   const [time, setTime] = useState(null);
+  const socket = useContext(socketContext);
 
   useEffect(() => {
-    socket.on('timer:tick', setTime);
+    socket && socket.on('timer:tick', setTime);
   }, [socket]);
+
+  useEffect(update, [update, time])
 
   return (
     <>
       {time !== null && (
-        <Grid container justify='center'>
-          <Typography style={{ margin: '50px' }} variant='h4'>
-            {moment.duration(time).format('h:mm:ss')}
-          </Typography>
-        </Grid>
+        <Typography
+          className='timer flex-center'
+          variant='h6'
+        >
+          {moment.duration(time).format('h:mm:ss')}
+        </Typography>
       )}
     </>
   );
 };
 
-export default withSocket(Timer);
+export default Timer;
