@@ -32,11 +32,6 @@ const useStyles = makeStyles(theme => ({
   mt10: {
     marginTop: '10px'
   },
-  textField: {
-    flexGrow: 1,
-    marginRight: 20,
-    marginLeft: 20 
-  }
 }));
 
 const Admin = () => {
@@ -211,7 +206,6 @@ const Admin = () => {
           <Typography>Включить таймер</Typography>
           <TextField
             type='time'
-            className={classes.textField}
             margin='none'
             value={duration}
             onChange={e => setDuration(e.target.value)}

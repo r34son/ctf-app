@@ -37,8 +37,8 @@ export default () => {
           <Route path='/login' component={Login} />
           <PrivateRoute path='/tasks' component={Tasks} />
           <PrivateRoute path='/scoreboard' component={Scoreboard} />
-          <Route path='/admin' component={Admin} />
-          <Route path='/addteam' component={AddTeam} />
+          <PrivateRoute path='/admin' component={Admin} />
+          <PrivateRoute path='/addteam' component={AddTeam} />
         </Router>
       </UserContext.Provider>
     </SocketContext.Provider>

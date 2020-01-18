@@ -57,12 +57,13 @@ io.on('connection', client => {
   const user = client.decoded_token;
   console.log('connected', user.login);
   TimerModel.findOne().then(timer => {
-    timer && sendTime(timer.time);
+    timer && client.emit('timer:tick', timer.time);
   });
-  client.on('timer:start', time => timer.start(time));
-  client.on('timer:stop', timer.stop);
-  client.on('timer:pause', timer.pause);
-  client.on('timer:resume', timer.resume);
-
+  if (user.isAdmin) {
+    client.on('timer:start', time => timer.start(time));
+    client.on('timer:stop', timer.stop);
+    client.on('timer:pause', timer.pause);
+    client.on('timer:resume', timer.resume);
+  }
   client.on('disconnect', () => console.log('disconnected'));
 });
