@@ -23,7 +23,6 @@ mongoose.connect(
   },
   err => {
     if (err) return console.log(err);
-
     console.log('Connected to MongoDB!');
   }
 );
@@ -36,7 +35,6 @@ app
   .use(morgan('dev'))
   .use(express.json())
   .use(express.static(path.join(__dirname, '../build')))
-  .use(express.static(path.join(__dirname, '../tasks')))
   .use('/', router);
 
 const server = app.listen(port, () =>
@@ -44,21 +42,15 @@ const server = app.listen(port, () =>
 );
 
 const io = require('socket.io')(server);
-const sendTime = data => io.sockets.emit('timer:tick', data);
 const sendTasks = tasks => io.sockets.emit('tasks', tasks);
-const timer = new Timer(sendTime);
+const timer = new Timer(data => io.sockets.emit('timer:tick', data));
 
-io.use(socketioJwt.authorize({
-  secret,
-  handshake: true
-}));
+io.use(socketioJwt.authorize({ secret, handshake: true }));
 
 io.on('connection', client => {
   const user = client.decoded_token;
   console.log('connected', user.login);
-  TimerModel.findOne().then(timer => {
-    timer && client.emit('timer:tick', timer.time);
-  });
+  TimerModel.findOne().then(timer => timer && client.emit('timer:tick', timer.time));
   if (user.isAdmin) {
     client.on('timer:start', time => timer.start(time));
     client.on('timer:stop', timer.stop);
