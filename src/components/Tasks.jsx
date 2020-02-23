@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Grid,
   Chip,
@@ -13,19 +13,19 @@ import {
   TextField,
   Button,
   Snackbar
-} from '@material-ui/core';
-import ReactMarkdown from 'react-markdown/with-html';
-import DoneIcon from '@material-ui/icons/Done';
-import InfoIcon from '@material-ui/icons/Info';
-import Loader from './Loader';
+} from "@material-ui/core";
+import ReactMarkdown from "react-markdown/with-html";
+import DoneIcon from "@material-ui/icons/Done";
+import InfoIcon from "@material-ui/icons/Info";
+import Loader from "./Loader";
 
-import api from '../api';
+import api from "../api";
 
 const useStyles = makeStyles(theme => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -33,24 +33,24 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3, 4, 3)
   },
   grid: {
-    outline: '0',
-    outlineOffset: '0'
+    outline: "0",
+    outlineOffset: "0"
   },
   root: {
-    margin: '20px auto'
+    margin: "20px auto"
   },
   mt20: {
-    marginTop: '20px'
+    marginTop: "20px"
   },
   mt10: {
-    marginTop: '10px'
+    marginTop: "10px"
   }
 }));
 
 const Tasks = () => {
   const [open, setOpen] = useState(false);
   const [task, setTask] = useState({});
-  const [flag, setFlag] = useState('');
+  const [flag, setFlag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -59,25 +59,25 @@ const Tasks = () => {
   const [submit, setSubmit] = useState();
   const classes = useStyles();
 
-  const getTasks = () => {
-    setIsLoading(true);
+  const getTasks = useCallback(() => {
+    isLoading !== null && setIsLoading(true);
     api
       .getTasks()
       .then(data => {
-        setIsLoading(false);
+        setIsLoading(null);
         setTasks(data);
       })
       .catch(err => {
         console.log(err);
-        setIsLoading(false);
+        setIsLoading(null);
       });
-  };
+  }, [isLoading]);
 
   useEffect(() => {
     getTasks();
     const timer = setInterval(getTasks, 60000);
     return () => clearInterval(timer);
-  }, []);
+  }, [getTasks]);
 
   useEffect(() => {
     if (!tasks.message) {
@@ -109,7 +109,7 @@ const Tasks = () => {
         getTasks();
         setStatus(true);
         setSubmit(true);
-        console.log('submit flag data', data);
+        console.log("submit flag data", data);
       })
       .catch(err => {
         console.log(err);
@@ -124,7 +124,7 @@ const Tasks = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <Grid container item md={9} className={classes.root} justify='center'>
+        <Grid container item md={9} className={classes.root} justify="center">
           {categories.length !== 0 ? (
             categories.map(category => (
               <Grid
@@ -133,8 +133,8 @@ const Tasks = () => {
                 xs={6}
                 container
                 item
-                direction='column'
-                alignItems='center'
+                direction="column"
+                alignItems="center"
                 key={category.name}
                 style={{ marginTop: 10 }}
               >
@@ -144,7 +144,7 @@ const Tasks = () => {
                     key={task.title}
                     className={classes.mt20}
                     label={points}
-                    color={task.solved ? 'primary' : 'default'}
+                    color={task.solved || task.enabled ? "primary" : "default"}
                     icon={task.solved ? <DoneIcon /> : null}
                     onClick={() => {
                       setTask(task);
@@ -169,7 +169,7 @@ const Tasks = () => {
         open={open}
         onClose={() => {
           setOpen(false);
-          setFlag('');
+          setFlag("");
         }}
         className={classes.modal}
       >
@@ -182,21 +182,21 @@ const Tasks = () => {
                 <ReactMarkdown source={task.description} escapeHtml={false} />
               </Typography>
               {task.solved ? (
-                <Chip className={classes.mt20} label={'Task solved'} />
+                <Chip className={classes.mt20} label={"Task solved"} />
               ) : (
                 <FormGroup row className={classes.mt10}>
                   <TextField
-                    label='Flag'
+                    label="Flag"
                     value={flag}
                     onChange={e => setFlag(e.target.value)}
-                    margin='none'
-                    placeholder='flag...'
-                    style={{ flexGrow: '1', marginRight: '15px' }}
+                    margin="none"
+                    placeholder="flag..."
+                    style={{ flexGrow: "1", marginRight: "15px" }}
                   />
                   <Button
-                    variant='contained'
-                    size='medium'
-                    color='primary'
+                    variant="contained"
+                    size="medium"
+                    color="primary"
                     onClick={() => submitFlag(task._id)}
                   >
                     Submit
@@ -211,24 +211,24 @@ const Tasks = () => {
         <Grid item md={3} className={classes.grid}>
           <Paper
             className={classes.paper}
-            style={{ display: 'flex', justifyContent: 'center' }}
+            style={{ display: "flex", justifyContent: "center" }}
           >
             <Chip
-              variant='outlined'
-              color='secondary'
-              label={'Время вышло, флаги больше не принимаются!'}
+              variant="outlined"
+              color="secondary"
+              label={"Время вышло, флаги больше не принимаются!"}
             />
           </Paper>
         </Grid>
       </Modal>
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         open={submit}
         onClose={() => setSubmit(false)}
         message={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <InfoIcon style={{ marginRight: '20px' }} />
-            {status ? 'Флаг принят' : 'Неверный флаг'}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <InfoIcon style={{ marginRight: "20px" }} />
+            {status ? "Флаг принят" : "Неверный флаг"}
           </div>
         }
       />
