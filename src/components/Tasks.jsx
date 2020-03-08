@@ -101,11 +101,9 @@ const Tasks = () => {
   }, [task._id, tasks]);
 
   const submitFlag = id => {
-    setIsLoading(true);
     api
       .submitFlag(id, flag)
       .then(data => {
-        setIsLoading(false);
         getTasks();
         setStatus(true);
         setSubmit(true);
@@ -115,7 +113,6 @@ const Tasks = () => {
         console.log(err);
         setStatus(false);
         setSubmit(true);
-        setIsLoading(false);
       });
   };
 

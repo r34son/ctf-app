@@ -49,42 +49,32 @@ router.get("/scoreboard", verifyToken(), async (req, res, next) => {
 
   try {
     const users = await User.find({ isAdmin: false });
-    // TEST IT
-    // users.forEach(user => {
-    //   scoreboard[user.login] = user.solvedTasks.map(async id => {
-    //     const { title, points } = await Task.findById(id);
-    //     return { title, points };
-    //   });
-    // });
 
     for (let i = 0; i < users.length; ++i) {
       let team = [];
 
       for (let j = 0; j < users[i].solvedTasks.length; ++j) {
         const task = await Task.findById(users[i].solvedTasks[j]);
-        team.push({ title: task.title, points: task.points });
+        task && team.push({ title: task.title, points: task.points });
       }
-
       scoreboard[users[i].login] = team;
     }
   } catch (e) {
     return res.json({ error: "Oops, something went wrong!", details: e });
   }
+  const simpleScoreboard = {};
+  Object.keys(scoreboard).forEach(user => {
+    simpleScoreboard[user] = scoreboard[user].reduce(
+      (score, task) => score + task.points,
+      0
+    );
+  });
 
   if (!req.isAdmin) {
-    const simpleScoreboard = {};
-
-    Object.keys(scoreboard).forEach(user => {
-      simpleScoreboard[user] = scoreboard[user].reduce(
-        (score, task) => score + task.points,
-        0
-      );
-    });
-
     return res.json({ scoreboard: simpleScoreboard });
   }
 
-  res.json({ scoreboard });
+  res.json({ scoreboard: simpleScoreboard, scoreboardTasks: scoreboard });
 });
 
 router.post("/add", verifyToken({ isAdmin: true }), async (req, res, next) => {

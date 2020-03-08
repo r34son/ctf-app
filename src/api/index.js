@@ -2,10 +2,10 @@ import config from "../config";
 import { getData } from "../utils";
 
 const base = `${config.protocol}://${config.server}:${config.port}/api`;
-const headers = {
+const getHeaders = () => ({
   "Content-Type": "application/json;charset=utf-8",
-  auth: getData() && getData().token
-};
+  auth: getData().token
+});
 
 const login = async values => {
   console.log("Sending request to login.");
@@ -26,7 +26,7 @@ const getTasks = async () => {
   console.log("Sending request to get tasks");
   const response = await fetch(`${base}/task/`, {
     method: "GET",
-    headers
+    headers: getHeaders()
   });
   if (!response.ok) {
     throw new Error("Failed to fetch.");
@@ -38,7 +38,7 @@ const submitFlag = async (id, flag) => {
   console.log("Sending request to submit flag");
   const response = await fetch(`${base}/task/submit/${id}`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({ flag })
   });
   if (!response.ok) {
@@ -51,7 +51,7 @@ const getScore = async () => {
   console.log("Sending request to get tasks");
   const response = await fetch(`${base}/task/scoreboard`, {
     method: "GET",
-    headers
+    headers: getHeaders()
   });
   if (!response.ok) {
     throw new Error("Failed to fetch.");
@@ -63,7 +63,7 @@ const addTeam = async values => {
   console.log("Sending request to add team");
   const response = await fetch(`${base}/auth/addUser`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify(values)
   });
   if (!response.ok) {
@@ -76,7 +76,7 @@ const addTask = async task => {
   console.log("Sending request to add task");
   const response = await fetch(`${base}/task/add`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify(task)
   });
   if (!response.ok) {
@@ -89,7 +89,7 @@ const onToggle = async (id, enabled) => {
   console.log("Sending request to enable task");
   const response = await fetch(`${base}/task/force`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify({ force: enabled ? -1 : 1, taskId: id })
   });
   if (!response.ok) {
