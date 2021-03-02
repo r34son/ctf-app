@@ -120,7 +120,7 @@ router.post("/submit/:taskId", verifyToken(), async (req, res, next) => {
 
   const task = await Task.findById(taskId);
 
-  if (task.force < 0 || duration - time <= task.enableAfter)
+  if (task.force < 0 || (task.enableAfter && duration - time <= task.enableAfter))
     return res.status(400).json({ error: "Task in not currently enabled" });
 
   bcrypt.compare(flag, task.flag, async (err, correct) => {

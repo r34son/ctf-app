@@ -17,7 +17,6 @@ const { Timer: TimerModel } = require("./models");
 mongoose.connect(
   `mongodb+srv://${username}:${password}@${url}`,
   {
-    autoCreate: true,
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
