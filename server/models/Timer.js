@@ -3,16 +3,16 @@ const mongoose = require('mongoose');
 const timerSchema = new mongoose.Schema({
   time: {
     type: Number,
-    required: true
+    required: true,
   },
   duration: {
     type: Number,
-    required: true
+    required: true,
   },
   state: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Timer', timerSchema);
